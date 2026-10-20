@@ -1,0 +1,92 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>設計思考流程與九大工具</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+/* 版面：一欄閱讀，頂部是方法索引，下面依序是 8 頁紀錄；紅色只用在階段與方法編號 */
+:root{
+  --bg:#F1F1F1; --paper:#FFFFFF; --ink:#303030; --muted:#585C64; --line:#DCDCDC;
+  --red:#D4003C; --red-tint:#FCE6EC; --chip:#F9F9F9;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#18171A; --paper:#222125; --ink:#ECEAEE; --muted:#A9A6AE; --line:#38363C;
+  --red:#FF4D7A; --red-tint:#3A1A24; --chip:#2A292E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#18171A; --paper:#222125; --ink:#ECEAEE; --muted:#A9A6AE; --line:#38363C;
+  --red:#FF4D7A; --red-tint:#3A1A24; --chip:#2A292E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:920px;margin:0 auto}
+header{padding-block:40px 24px;display:grid;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;color:var(--muted)}
+.eyebrow b{color:var(--red);font-weight:700}
+h1{font-size:clamp(30px,6vw,46px);line-height:1.2;font-weight:900;margin:0;text-wrap:balance}
+.lead{margin:0;max-width:40em;color:var(--ink)}
+.meta{font-size:14px;color:var(--muted)}
+.idx{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:14px}
+.idx h2{font-size:15px;margin:0;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stage{display:grid;gap:8px;align-content:start;min-width:0}
+.stage .name{font-weight:700;font-size:15px;color:var(--red);border-bottom:2px solid var(--red);padding-bottom:4px}
+.stage a{display:flex;gap:8px;align-items:baseline;text-decoration:none;color:var(--ink);font-size:14.5px;line-height:1.45;padding:6px 8px;border-radius:8px;background:var(--chip)}
+.stage a:hover{background:var(--red-tint)}
+.stage a:focus-visible,.pages a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.num{flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:inline-grid;place-items:center;line-height:1}
+.pg{margin-left:auto;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pages{display:grid;gap:28px;margin-top:28px}
+figure{margin:0;display:grid;gap:8px;scroll-margin-top:16px}
+figcaption{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+figure img{width:100%;max-width:100%;height:auto;display:block;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.note{font-size:13px;color:var(--muted);margin-top:28px}
+@media (max-width:640px){.stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head><body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><b>2026 InnoConnect+</b>　全國電子．揪居家</div>
+    <h1>設計思考流程與九大工具</h1>
+    <p class="lead">起點是一位組員的阿嬤：一個人住以後，深夜去廁所的路上滑倒過好幾次。這份紀錄用九個方法，依「同理 → 定義 → 發想 → 原型」走到揪居家。</p>
+    <div class="meta">團隊　五子登科｜2026 年 10 月｜共 8 頁，與提案書同步｜<a href="jiujujia-design-thinking.pdf">下載 PDF</a></div>
+  </header>
+
+  <nav class="idx" aria-label="九個方法">
+    <h2>九大工具｜點選跳到該頁</h2>
+    <div class="stages">
+      <div class="stage"><div class="name">同理</div>
+        <a href="#p3"><span class="num">1</span>6W<span class="pg">p.3</span></a>
+        <a href="#p3"><span class="num">2</span>AEIOU<span class="pg">p.3</span></a>
+        <a href="#p4"><span class="num">3</span>親和圖（KJ 法）<span class="pg">p.4</span></a>
+        <a href="#p4"><span class="num">4</span>同理心地圖<span class="pg">p.4</span></a>
+      </div>
+      <div class="stage"><div class="name">定義</div>
+        <a href="#p5"><span class="num">5</span>人物誌<span class="pg">p.5</span></a>
+        <a href="#p5"><span class="num">6</span>POV<span class="pg">p.5</span></a>
+      </div>
+      <div class="stage"><div class="name">發想</div>
+        <a href="#p5"><span class="num">7</span>HMW<span class="pg">p.5</span></a>
+        <a href="#p6"><span class="num">8</span>服務藍圖<span class="pg">p.6</span></a>
+      </div>
+      <div class="stage"><div class="name">原型</div>
+        <a href="#p7"><span class="num">9</span>原型／MVP<span class="pg">p.7</span></a>
+        <a href="#p8"><span class="num" style="background:var(--muted)">附</span>參考資料<span class="pg">p.8</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pages">
+    <figure id="p1"><figcaption><span>封面與總覽</span><span>第 1 頁</span></figcaption><img src="p-1.jpg" alt="第 1 頁：封面與九個方法總覽" width="1654" height="2339"></figure>
+    <figure id="p2"><figcaption><span>目錄</span><span>第 2 頁</span></figcaption><img src="p-2.jpg" alt="第 2 頁：目錄與閱讀提示" width="1654" height="2339"></figure>
+    <figure id="p3"><figcaption><span>1 6W・2 AEIOU</span><span>第 3 頁</span></figcaption><img src="p-3.jpg" alt="第 3 頁：6W 範圍表與 AEIOU 兩個場景" width="1654" height="2339" loading="lazy"></figure>
+    <figure id="p4"><figcaption><span>3 親和圖・4 同理心地圖</span><span>第 4 頁</span></figcaption><img src="p-4.jpg" alt="第 4 頁：親和圖與同理心地圖" width="1654" height="2339" loading="lazy"></figure>
+    <figure id="p5"><figcaption><span>5 人物誌・6 POV・7 HMW</span><span>第 5 頁</span></figcaption><img src="p-5.jpg" alt="第 5 頁：人物誌、POV 與 HMW" width="1654" height="2339" loading="lazy"></figure>
+    <figure id="p6"><figcaption><span>8 服務藍圖</span><span>第 6 頁</span></figcaption><img src="p-6.jpg" alt="第 6 頁：服務藍圖與心情低點對策" width="1654" height="2339" loading="lazy"></figure>
+    <figure id="p7"><figcaption><span>9 原型／MVP</span><span>第 7 頁</span></figcaption><img src="p-7.jpg" alt="第 7 頁：五套原型、試點 MVP 與擴張門檻" width="1654" height="2339" loading="lazy"></figure>
+    <figure id="p8"><figcaption><span>參考資料</span><span>第 8 頁</span></figcaption><img src="p-8.jpg" alt="第 8 頁：資料來源與便利抽樣訪談說明" width="1654" height="2339" loading="lazy"></figure>
+  </div>
+  <p class="note">五子登科｜全國電子．揪居家　設計思考紀錄 v4</p>
+</div>
+</body></html>

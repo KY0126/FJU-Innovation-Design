@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FJU 創新思考與設計</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap">
+<style>
+:root{--bg:#F1F1F1;--paper:#fff;--ink:#303030;--muted:#585C64;--line:#DCDCDC;--red:#D4003C;--tint:#FCE6EC;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#18171A;--paper:#222125;--ink:#ECEAEE;--muted:#A9A6AE;--line:#38363C;--red:#FF4D7A;--tint:#3A1A24;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.7;padding:0 max(16px,env(safe-area-inset-left,0px)) 48px}
+.wrap{max-width:860px;margin:0 auto}
+header{padding:48px 0 20px}
+.eyebrow{font-size:13px;letter-spacing:.08em;color:var(--muted)}
+h1{font-size:clamp(28px,6vw,42px);margin:4px 0 8px;font-weight:900}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.card h2{margin:0;font-size:22px}
+.card h2 small{display:block;font-size:13px;font-weight:400;color:var(--muted)}
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.links a{display:grid;gap:2px;text-decoration:none;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:12px 14px}
+.links a:hover{background:var(--tint)}
+.links a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.links b{font-size:16px}.links span{font-size:13px;color:var(--muted)}
+@media (max-width:560px){.links{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">輔仁大學｜五子登科</div>
+    <h1>FJU 創新思考與設計</h1>
+    <p>團隊在創新思考與設計課程中的提案、設計思考紀錄與可操作原型。</p>
+  </header>
+  <section class="card" aria-labelledby="p1">
+    <h2 id="p1">全國電子．揪居家<small>2026 InnoConnect+ 全國服務創新跨界共創大賽</small></h2>
+    <div class="links">
+      <a href="https://youtu.be/rb1K2hcmfCA"><b>Demo 影片</b><span>2 分 22 秒，從 AR 場勘到派工</span></a>
+      <a href="jiujujia/design-thinking/"><b>設計思考流程與九大工具</b><span>同理、定義、發想、原型，共 8 頁</span></a>
+      <a href="jiujujia/app.html"><b>消費者端 APP</b><span>AR 場勘、阿國推薦、揪夜安、揪心願</span></a>
+      <a href="jiujujia/admin.html"><b>企業營運資訊平台</b><span>門市營運、派工、揪心願與試點指標</span></a>
+    </div>
+  </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<script src="backend.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>揪居家｜消費者端 APP</title>
+<meta name="theme-color" content="#D4003C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#D4003C;--brand-soft:#FCE6EC;--brand-ink:#B80C40;
+  --bg:#F2F2F3;--card:#FFFFFF;--ink:#2B2B29;--muted:#6B6A66;--line:#E6E5E1;
+  --ok:#2E6B2E;--ok-soft:#E8F2E1;--note:#FAF6EE;--page:#E4E3DF;
+  --fs:15px;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --brand:#F0476E;--brand-soft:#3A1A24;--brand-ink:#F7B8C9;--bg:#161616;--card:#232322;--ink:#EDEDEA;--muted:#A9A8A3;--line:#34332F;--ok:#9ACB86;--ok-soft:#22301D;--note:#2A2620;--page:#0F0F0F;}}
+:root[data-theme="dark"]{--brand:#F0476E;--brand-soft:#3A1A24;--brand-ink:#F7B8C9;--bg:#161616;--card:#232322;--ink:#EDEDEA;--muted:#A9A8A3;--line:#34332F;--ok:#9ACB86;--ok-soft:#22301D;--note:#2A2620;--page:#0F0F0F;}
+*,*:before,*:after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--page);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-size:var(--fs);line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.shell{max-width:420px;height:100%;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media (min-width:560px){body{padding:24px 0}.shell{height:calc(100% - 0px);max-height:880px;border-radius:32px;border:8px solid #2B2B29;box-shadow:0 20px 60px rgba(0,0,0,.18)}}
+.ctl{max-width:900px;margin:0 auto 10px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:center;font-size:13px;padding:0 12px}
+.ctl .lb{color:var(--muted)}.ctl #phl{font-weight:700;color:var(--ink)}
+.ctl button{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:16px;padding:5px 12px;font-size:13px}
+.ctl button.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.ctl button:disabled{opacity:.45;cursor:not-allowed}
+@media (max-width:559px){body{display:flex;flex-direction:column}.ctl{flex:none;margin:0;padding:6px 10px;background:var(--ink);color:var(--bg)}.ctl .lb,.ctl #phl{color:var(--bg)}.shell{height:auto;flex:1;min-height:0}}
+.tl2 .st{display:flex;gap:10px;padding:7px 0;border-top:1px solid var(--line)}.tl2 .st:first-child{border-top:0}
+.tl2 .tm{width:44px;flex:none;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9em}
+.tl2 .mk{width:20px;height:20px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;background:var(--line);margin-top:1px}
+.tl2 .done .mk{background:var(--ok)}.tl2 .cur .mk{background:var(--brand)}.tl2 .todo{opacity:.55}
+.chain{display:flex;flex-direction:column;gap:4px}.chain div{display:flex;gap:8px;align-items:flex-start;font-size:.93em}.chain b{flex:none;width:20px;height:20px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-size:12px;display:flex;align-items:center;justify-content:center}
+.ribbon{background:var(--ink);color:var(--bg);font-size:12px;padding:5px 14px;display:flex;justify-content:space-between;align-items:center}
+.ribbon button{font-size:12px;text-decoration:underline}
+.top{background:var(--card);display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);min-height:52px}
+.top h1{font-size:17px;margin:0;font-weight:700;flex:1}
+.back{color:var(--brand);font-size:22px;line-height:1;width:28px;height:28px}
+.aplus{font-size:13px;border:1px solid var(--line);border-radius:14px;padding:3px 10px;color:var(--muted)}
+.aplus[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:16px}
+.card{background:var(--card);border-radius:14px;margin:0 12px 12px;padding:14px}
+.sec{font-size:14px;font-weight:700;color:var(--muted);padding:14px 16px 8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.chev{color:var(--brand);font-size:18px}
+.tag{font-size:12px;padding:2px 9px;border-radius:12px;background:var(--brand-soft);color:var(--brand-ink);white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.btn{display:block;width:100%;text-align:center;background:var(--brand);color:#fff;border-radius:10px;padding:13px;font-weight:500;font-size:1.02em}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);margin-top:8px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.pad{padding:0 12px}
+.muted{color:var(--muted);font-size:.9em}
+.nav{background:#F1F1F1;border-top:1px solid #DCDCDC;display:flex;justify-content:space-around;padding:6px 0 calc(8px + env(safe-area-inset-bottom,0px))}
+.nav button{display:flex;flex-direction:column;align-items:center;font-size:12px;color:#606060;gap:2px;min-width:56px}
+.nav button[aria-current="page"]{color:var(--brand)}
+.nav svg{width:22px;height:22px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 4px;text-align:center;font-size:12px}
+.grid .gi{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted)}
+.gi .ic{width:40px;height:40px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px}
+.gi.hot{color:var(--brand);font-weight:500}
+.gi.hot .ic{background:var(--brand-soft)}
+.opt{display:block;width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:16px;margin-bottom:10px;font-size:1.08em}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);font-weight:700}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);transition:width .25s}
+.slot{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.95em;background:var(--card)}
+.slot[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft);font-weight:700}
+.slot[data-fam],.slot[data-wcat]{display:inline-block}
+.slot:disabled{opacity:.45;text-decoration:line-through}
+.tabs{display:flex;background:var(--card);border-radius:22px;padding:3px;margin:12px}
+.tabs button{flex:1;text-align:center;padding:8px;border-radius:19px;font-size:.95em;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--brand);color:#fff}
+.hero-path{background:var(--note);border-radius:12px;padding:6px}
+.role{display:block;width:100%;background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border:1.5px solid var(--line)}
+.role.on{border-color:var(--brand)}
+.s3{display:flex;gap:4px;margin-top:8px}.s3>div{flex:1;min-width:0;border-radius:8px;padding:4px 6px;font-size:12px;line-height:1.35;background:var(--bg);color:var(--muted)}.s3>div b{display:block;font-size:13px}.s3 .dn{background:var(--ok-soft);color:var(--ok)}.s3 .cu{background:var(--brand);color:#fff}
+.stp{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:10px;background:var(--brand-soft);color:var(--brand-ink);margin-left:6px;vertical-align:1px}
+.c3 .row{align-items:flex-start;justify-content:flex-start;gap:8px}.c3 .n3{flex:none;color:var(--brand);font-weight:700}
+.toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:88%;width:max-content;text-align:center;z-index:20}
+.toast.show{opacity:1}
+.stf{background:var(--brand);color:#fff;display:flex;align-items:center;gap:8px;padding:11px 14px;min-height:50px}
+.stf h1{font-size:16px;margin:0;flex:1;font-weight:700}
+.stf .back{color:#fff}
+.stf .clk{font-size:12px;background:rgba(255,255,255,.18);border-radius:10px;padding:2px 8px;font-variant-numeric:tabular-nums}
+.step{font-size:13px;color:var(--muted);padding:10px 16px 4px}
+.chip{display:inline-block;border:1.5px solid var(--line);border-radius:18px;padding:7px 13px;margin:0 6px 8px 0;font-size:.95em;background:var(--card)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.ly{background:var(--card);border-radius:12px;margin:0 12px 10px;padding:10px 12px}
+.ly h3{margin:0 0 4px;font-size:.98em;display:flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.it{display:flex;align-items:flex-start;gap:10px;width:100%;padding:8px 0;border-top:1px solid var(--line)}
+.it:first-of-type{border-top:0}
+.ck{width:20px;height:20px;border-radius:5px;border:2px solid var(--line);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.ck.on{background:var(--brand);border-color:var(--brand)}
+.ck.later{border-style:dashed;border-color:#B80C40;color:#B80C40}
+.rs{font-size:.84em;color:var(--muted)}
+.rtag{font-size:11px;color:var(--brand-ink);background:var(--brand-soft);border-radius:8px;padding:1px 6px;margin-left:4px}
+.warn{background:var(--brand-soft);color:var(--brand-ink);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.9em}
+.okbox{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.9em}
+.sum{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px}
+.sum .btn{width:auto;flex:1}
+.fld{display:block;resize:vertical;width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;background:var(--card);color:var(--ink);margin-top:4px}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;text-align:center;padding:9px;font-size:.95em}
+.seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.arseg{margin:8px 0 0;background:rgba(255,255,255,.92);border-color:rgba(255,255,255,.92)}
+.arseg button{color:var(--ink);font-weight:700}
+.plan{display:block;width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:var(--card)}
+.plan[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}
+.chat{background:#8CABD9;flex:1;overflow-y:auto;padding:14px 12px 16px}
+:root[data-theme="dark"] .chat{background:#2A3547}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chat{background:#2A3547}}
+.lh{background:#2C3E5C;color:#fff;padding:11px 14px;display:flex;align-items:center;gap:8px;min-height:50px}
+.lh .back{color:#fff}
+.bub{background:var(--card);border-radius:16px;overflow:hidden;max-width:310px}
+.bub .hd{padding:12px}
+.ts{font-size:11px;color:#EEF2FA;text-align:right;margin:4px 0 12px}
+.sysnote{font-size:12px;color:#EEF2FA;text-align:center;margin:6px 0 10px}
+.sim{margin:14px 12px 0;border:1.5px dashed var(--muted);border-radius:12px;padding:10px 12px;background:var(--card)}
+.sim b{font-size:.9em}
+.tl{position:relative;padding-left:18px}
+.tl div{position:relative;padding:4px 0 8px;font-size:.92em}
+.tl div:before{content:"";position:absolute;left:-14px;top:10px;width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.tl div:after{content:"";position:absolute;left:-11px;top:18px;bottom:-6px;width:2px;background:var(--line)}
+.tl div:last-child:after{display:none}
+.entry{display:flex;align-items:center;gap:12px;width:calc(100% - 24px);margin:10px 12px 12px;background:var(--card);border-radius:14px;padding:10px 14px;border:2px solid var(--brand);min-height:56px;text-align:left}
+.entry .eh{width:40px;height:40px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.entry .es{display:block;font-size:.86em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hintbar{background:var(--note);color:var(--muted);font-size:13px;padding:7px 14px;text-align:center;border-top:1px solid var(--line)}
+.tip{background:#FFF4D6;color:#5A4300;font-size:13px;padding:8px 14px;border-bottom:1px solid #F2D58A}
+.adm td,.adm th{padding:6px 4px;border-bottom:1px solid var(--line);font-size:12.5px;text-align:left}
+.pbar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--brand);border-radius:4px}
+.avt{width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;flex-shrink:0}
+.big{font-size:1.45em;font-weight:700;line-height:1.3;margin:2px 0 6px}
+
+/* 最小字級 13px（大字模式仍可放大） */
+.rs,.muted,.step,.sysnote,.ts,.hintbar,.tip{font-size:max(13px,.9em)!important}
+.tag{font-size:max(12px,.82em)!important}
+[style*="font-size:.85em"],[style*="font-size:.86em"],[style*="font-size:.88em"],[style*="font-size:12px"],[style*="font-size:12.5px"],[style*="font-size:11px"]{font-size:max(13px,.9em)!important}
+
+/* 上線版新增 */
+.ld{display:flex;align-items:center;justify-content:center;flex:1;color:var(--muted);padding:40px 16px;text-align:center}
+.err{color:var(--brand-ink);background:var(--brand-soft);border-radius:8px;padding:8px 10px;margin-top:10px;font-size:.9em}
+.err:empty{display:none}
+.lgh{display:flex;gap:12px;align-items:center}.lgh .eh{width:46px;height:46px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+.demo-accounts{border:1.5px dashed var(--muted);margin:14px 0 0}
+.demo-accounts button{display:block;width:100%;text-align:left;padding:8px 0;border-top:1px solid var(--line)}
+.demo-accounts button:first-of-type{margin-top:6px}
+#envBadge{position:fixed;bottom:76px;left:6px;opacity:.9;z-index:60;background:#B7791F;color:#fff;font-size:12px;border-radius:10px;padding:2px 10px;pointer-events:none}
+.dot.lt{width:12px;height:12px;margin-right:8px;vertical-align:-1px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.meas{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.mf{display:block;font-size:.9em;color:var(--muted)}.mf>span:first-child{display:block}
+.unit{display:flex;align-items:center;gap:6px}.unit .fld{margin-top:4px;min-width:0}.unit i{font-style:normal;flex:none}
+.agline{display:flex;align-items:center;gap:8px;margin-top:16px}.agav{width:28px;height:28px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+select.fld{appearance:auto;-webkit-appearance:auto}
+.slot[data-slot]{font-size:.92em;padding:10px 8px;line-height:1.35}
+@media print{.top,.stf,.nav,.sum,.pad .btn,#envBadge{display:none!important}.shell{border:0!important;box-shadow:none!important;max-height:none!important;height:auto!important}}
+/* AR 掃描場勘：沿用舊版文件的全螢幕相機畫面（模擬示範）＋手動輸入 */
+.shell{width:100%}
+.arv{position:relative;flex:1;width:100%;align-self:stretch;min-height:0;overflow:hidden;background:#2b2b29;container-type:size}
+.arstage{position:absolute;left:50%;top:50%;width:max(100cqw,62.5cqh);height:max(100cqh,160cqw);transform:translate(-50%,-50%)}
+.arstage img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.arstage .bgg{opacity:0}
+.arsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.arlab{position:absolute;transform:translate(-50%,-50%) scale(.85);background:rgba(255,255,255,.96);color:#1f1f1f;font-weight:700;font-size:14px;border-radius:15px;padding:4px 11px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.25);opacity:0;transition:opacity .25s,transform .25s}
+.arlab.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.arlab i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.ardot{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.25);opacity:0}
+.reticle{position:absolute;left:50%;top:62%;width:56px;height:56px;margin:-28px 0 0 -28px;border:2px solid rgba(255,255,255,.92);border-radius:50%;box-shadow:0 0 0 2px rgba(0,0,0,.12)}
+.reticle:after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:#fff}
+.artop{position:absolute;left:10px;right:10px;top:10px;display:flex;flex-direction:column;gap:8px}
+.arhead,.arprog{background:rgba(58,58,56,.78);color:#fff;border-radius:14px}
+.arhead{display:flex;align-items:center;gap:8px;padding:9px 12px}
+.arhead .back{color:#fff;width:22px;height:22px;font-size:22px;line-height:1}
+.arhead b{flex:1;font-size:16px}
+.artag{font-size:12px;background:#E6EEF8;color:#2B5C9E;border-radius:10px;padding:2px 9px;white-space:nowrap}
+.arprog{padding:8px 12px 9px;font-size:13px}
+.arprog .r{display:flex;justify-content:space-between}
+.arprog .pb{height:6px;background:rgba(255,255,255,.28);border-radius:3px;margin-top:6px;overflow:hidden}
+.arprog .pb i{display:block;height:100%;width:0;background:#5DC17A;border-radius:3px}
+.archips{display:flex;gap:6px;flex-wrap:wrap}
+.archips span{font-size:13px;border-radius:15px;padding:5px 11px;background:rgba(58,58,56,.78);color:#fff;white-space:nowrap}
+.archips .go{background:#E0A030}
+.archips .ok{background:#2E7D4F}
+.arsheet{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:18px 18px 0 0;padding:12px 12px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 18px rgba(0,0,0,.18)}
+.arseg{display:flex;gap:6px;margin-bottom:8px}
+.arseg span{flex:1;text-align:center;border:1.5px solid var(--line);border-radius:10px;padding:6px 2px;font-size:.9em;color:var(--muted)}
+.arseg .dn{background:var(--ok-soft);color:var(--ok);border-color:#BFD9B3}
+.arseg .cu{background:var(--brand-soft);color:var(--brand);border-color:var(--brand);font-weight:700}
+.arres .row{padding:6px 0}
+.arnote{font-size:.86em;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.arlink{display:block;width:100%;text-align:center;color:var(--brand);font-size:.95em;padding:9px 0 2px}
+.armode{margin:10px 12px 0}
+.hplan .hpw{position:relative;margin-top:8px;border-radius:10px;overflow:hidden;background:#F6F3EE}.hplan .hpw img{display:block;width:100%}.hplan .hpw svg{position:absolute;inset:0;width:100%;height:100%}.hplan .hpr{animation:hpPulse 1.6s ease-in-out infinite}@keyframes hpPulse{50%{fill-opacity:.5}}
+</style>
+</head>
+<body>
+<div id="envBadge" hidden>示範環境</div>
+<div class="shell" id="app">
+  <div id="view" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+<script>
+(function(){
+const S={ph:0,ev:null,fromLog:false,stack:['boot'],ans:{},big:false,booked:null,saved:false,home:'parents',me:null,hh:null,cfg:null,meas:{},slots:null,cases:null,orders:null,todos:null,topics:null,famMine:{},fam:{grand:true}};
+const ESC_RE=new RegExp('[&<>'+String.fromCharCode(34,39)+']','g'),ESC_MAP={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc=s=>String(s==null?'':s).replace(ESC_RE,c=>ESC_MAP[c]);
+async function api(path,opt={}){
+ const o={method:opt.method||'GET',headers:{'Accept':'application/json'},credentials:'same-origin'};
+ if(opt.body!==undefined){o.headers['Content-Type']='application/json';o.body=JSON.stringify(opt.body)}
+ if(o.method!=='GET')o.headers['X-JJJ']='1';
+ let r;try{r=await fetch('/api'+path,o)}catch(e){throw new Error('網路連線不穩，請稍後再試')}
+ let d={};try{d=await r.json()}catch(e){}
+ if(r.status===401&&!opt.noAuthRedirect&&S.me){S.me=null;S.stack=['login'];render();throw new Error('登入已逾時，請重新登入')}
+ if(!r.ok)throw new Error(d.error||'系統忙碌中，請稍後再試');
+ return d}
+let BUSY=false;
+async function busy(btn,fn,errEl){if(BUSY)return;BUSY=true;let txt='';if(btn){txt=btn.textContent;btn.disabled=true;btn.textContent='處理中…'}
+ try{await fn()}catch(e){if(errEl&&errEl.isConnected)errEl.textContent=e.message;else toast(e.message||'發生錯誤')}
+ finally{BUSY=false;if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=txt}}}
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function EN(){return esc((S.ctx&&S.ctx.elder)||'長輩')}
+function ON(){return esc((S.ctx&&S.ctx.owner)||'家屬')}
+function CN(r,d){const c=((S.ctx&&S.ctx.contacts)||[]).find(x=>String(x.r||'').includes(r));return esc(c?c.n:d)}
+function STORE(){return esc((S.hh&&S.hh.household.store)||(S.me&&S.me.store)||'綁定門市')}
+const ADV_V=['a1','a2','a3','a4','a5','a6','d3','acard'],TECH_V=['t1','t2','t3','t4'];
+function setCtx(v){const blank={elder:'長輩',owner:'家屬',contacts:[]};
+ if(ADV_V.includes(v)){const c=S.case;S.ctx=c?{elder:c.elder_name,owner:c.owner,contacts:[]}:blank}
+ else if(TECH_V.includes(v)){const o=S.order;S.ctx=o?{elder:o.elder_name,owner:o.owner,contacts:[]}:blank}
+ else if(S.hh){const h=S.hh.household;S.ctx={elder:h.elder_name,owner:S.hh.owner,contacts:h.contacts||[]}}
+ else S.ctx=blank}
+function DEV(p){return S.hh?S.hh.devices.filter(d=>d.home===(p?'parents':'mine')):[]}
+const LC={r:'#D4003C',y:'#E0A030',g:'#138F3B',n:'#B9B7B0'},LT={r:'紅燈',y:'黃燈',g:'綠燈',n:'未量測'};
+function lightsCard(L){if(!L||!L.length)return '';const red=L.filter(x=>x[1]==='r').length,yel=L.filter(x=>x[1]==='y').length;
+ return `<div class="card lights"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>居家安全檢核</b><span class="muted" style="font-size:.85em">紅燈 ${red}｜黃燈 ${yel}</span></div>${L.map(([n,c,t])=>`<div class="row"><span><span class="dot lt" style="background:${LC[c]||LC.n}" aria-hidden="true"></span>${esc(n)}<span class="sr">${LT[c]||''}</span></span><span class="muted" style="font-size:.88em;text-align:right">${esc(t)}</span></div>`).join('')}<div class="muted" style="font-size:.85em;margin-top:6px">依 AR 場勘與問答自動標示，紅燈優先處理；不取代專業評估。</div></div>`}
+function measRows(m){const R=[['corridor_cm','床邊到浴室走道寬','cm'],['threshold_cm','浴室門檻高度','cm'],['bed_bath_m','床邊到浴室門口','公尺'],['outlets','沿路可用插座','個']];
+ return R.filter(([k])=>m[k]!=null).map(([k,l,u])=>`<div class="row"><span>${l}</span><b>約 ${m[k]} ${u}</b></div>`).join('')}
+function instItems(o){const sel=(o&&o.plan&&o.plan.sel)||{},D=(S.cfg&&S.cfg.install_devices)||{},acc={};
+ Object.keys(D).forEach(k=>{if(sel[k])D[k].forEach(([n,q])=>{acc[n]=(acc[n]||0)+q})});return Object.entries(acc)}
+function applyHome(d){S.hh=d;const h=d.household;S.ph=h.phase;const b=d.booking;
+ S.booked=b&&(['待指派','已指派'].includes(b.status)||S.ph>=2)?{id:b.id,store:b.store,slot:b.label,status:b.status}:null;
+ S.saved=!!d.assessment;const p=h.prefs||{};S.big=!!p.big;if(p.ns)S.ns=p.ns;S.famMine=p.fam||{};S.fam={grand:p.grand!==false};
+ S.obs=h.obs||null;S.obsDone=!!(h.obs&&h.obs.done)}
+async function loadHome(){applyHome(await api('/home'))}
+async function loadSlots(){const st=S.store||(S.hh&&S.hh.household.store);S.slots=(await api('/slots?store='+encodeURIComponent(st))).slots}
+async function loadCases(){const d=await api('/advisor/bookings');S.today=d.today;S.cases=d.bookings}
+async function loadTodos(){S.todos=await api('/advisor/todos')}
+async function loadOrders(){const d=await api('/tech/orders');S.today=d.today;S.orders=d.orders}
+async function loadTopics(){S.topics=await api('/wish-topics')}
+const LOAD={b4:loadSlots,a1:loadCases,d3:loadTodos,t1:loadOrders,wall:loadTopics,pre:loadTopics};
+async function savePrefs(o){if(S.me&&S.me.role==='family'){try{const d=await api('/home/prefs',{method:'PUT',body:o});S.hh.household.prefs=d.prefs}catch(e){toast(e.message)}}}
+async function sendReq(kind,note){try{const d=await api('/requests',{method:'POST',body:{kind,note}});toast(d.duplicate?'已送出過，門市處理中':'已送出「'+kind+'」，門市會與您聯絡')}catch(e){toast(e.message)}}
+async function boot(){
+ try{S.cfg=await api('/config',{noAuthRedirect:true})}catch(e){document.getElementById('view').innerHTML='<div class="ld">無法連線到伺服器，請稍後重新整理。</div>';return}
+ if(S.cfg.catalog)CAT.splice(0,CAT.length,...S.cfg.catalog);
+ if(S.cfg.demo){const b=document.getElementById('envBadge');if(b)b.hidden=false}
+ try{S.me=(await api('/me',{noAuthRedirect:true})).user}catch(e){S.me=null}
+ if(!S.me){S.stack=['login'];render();return}
+ try{await enter()}catch(e){S.stack=['login'];render();toast(e.message)}}
+async function enter(){const r=S.me.role;
+ if(r==='hq'){location.href='admin.html';return}
+ if(r==='family'){await loadHome();S.stack=['home']}
+ else if(r==='advisor'){await loadCases();S.stack=['a1']}
+ else if(r==='tech'){await loadOrders();S.stack=['t1']}
+ render()}
+async function logout(){try{await api('/auth/logout',{method:'POST',noAuthRedirect:true})}catch(e){}
+ Object.assign(S,{me:null,hh:null,ph:0,booked:null,saved:false,ans:{},meas:{},slots:null,cases:null,orders:null,todos:null,topics:null,case:null,order:null,adv:null,tech:null,obs:null,obsDone:false,big:false,invite:null,stack:['login']});render()}
+function demoBox(){const c=S.cfg;if(!c||!c.demo||!c.demo_accounts.length)return '';
+ return `<div class="card demo-accounts"><b>示範帳號</b><div class="muted" style="font-size:.85em">示範環境才會顯示；密碼皆為 ${esc(c.demo_password)}，點一下自動帶入</div>${c.demo_accounts.map(a=>`<button type="button" data-fill="${esc(a.email)}"><b style="font-weight:500">${esc(a.label)}</b><span class="muted" style="display:block;font-size:.85em">${esc(a.email)}</span></button>`).join('')}</div>`}
+const AR_SVG=`<svg viewBox="0 0 320 124" width="100%" role="img" aria-label="量測位置示意：A 走道寬度、B 浴室門檻高度、C 床邊到浴室門口距離"><rect x="6" y="14" width="78" height="92" rx="6" fill="var(--bg)" stroke="#8A8983"/><text x="45" y="30" font-size="11" text-anchor="middle" fill="#6B6A66">臥室</text><rect x="22" y="40" width="40" height="54" rx="4" fill="var(--card)" stroke="#8A8983"/><text x="42" y="71" font-size="10" text-anchor="middle" fill="#6B6A66">床</text><rect x="84" y="42" width="152" height="44" fill="var(--note)" stroke="#8A8983"/><text x="160" y="58" font-size="11" text-anchor="middle" fill="#6B6A66">走道</text><rect x="236" y="14" width="78" height="92" rx="6" fill="#E8F0F8" stroke="#8A8983"/><text x="276" y="30" font-size="11" text-anchor="middle" fill="#2B5C9E">浴室</text><rect x="233" y="48" width="7" height="32" fill="#D4003C"/><path d="M62 66 H234" stroke="#D4003C" stroke-width="2" stroke-dasharray="5 4" fill="none"/><path d="M104 44 V84 M100 44 H108 M100 84 H108" stroke="#2B5C9E" stroke-width="2"/><circle cx="118" cy="74" r="8" fill="#2B5C9E"/><text x="118" y="78" font-size="10" text-anchor="middle" fill="#fff" font-weight="700">A</text><circle cx="252" cy="92" r="8" fill="#D4003C"/><text x="252" y="96" font-size="10" text-anchor="middle" fill="#fff" font-weight="700">B</text><path d="M62 112 H234 M62 108 V116 M234 108 V116" stroke="#2E6B2E" stroke-width="2"/><circle cx="148" cy="112" r="8" fill="#2E6B2E"/><text x="148" y="116" font-size="10" text-anchor="middle" fill="#fff" font-weight="700">C</text></svg>`;
+// AR 掃描場勘：模擬示範動畫（正式版改接手機 AR 掃描，結果同樣帶入手動輸入欄位）
+// 座標為走廊模型影像（780×1248）的百分比位置
+const ARP={wl:[28.33,74.52],wr:[71.28,74.76],wlab:[49.8,70.6],dl:[39.74,20.27],dr:[62.44,20.19],dbl:[40.64,55.21],dbr:[61.41,55.29],door:[51.0,35.5],th:[46.5,53.6],o1:[74.2,69.0],o2:[66.5,47.2]};
+const AR_RES={corridor_cm:92,threshold_cm:2,bed_bath_m:5,outlets:'2'};
+const AR_T=6.2;
+function arViewHTML(){const p=k=>`left:${ARP[k][0]}%;top:${ARP[k][1]}%`,t=S.arT||0,done=t>=AR_T,run=t>0&&!done;
+ return `<div class="arv" aria-label="AR 掃描場勘（模擬示範）"><div class="arstage">
+ <img src="ar/ar_plain.jpg" alt="走廊相機畫面（模擬）" class="bgp"><img src="ar/ar_grid.jpg" alt="" class="bgg" id="arGrid">
+ <svg class="arsvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <polyline id="arDoor" points="${ARP.dbl.join(',')} ${ARP.dl.join(',')} ${ARP.dr.join(',')} ${ARP.dbr.join(',')}" fill="none" stroke="#FFD23F" stroke-width="2.5" vector-effect="non-scaling-stroke" opacity="0"/>
+  <line id="arLine" x1="${ARP.wl[0]}" y1="${ARP.wl[1]}" x2="${ARP.wl[0]}" y2="${ARP.wl[1]}" stroke="#fff" stroke-width="3" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+ </svg>
+ <span class="ardot" id="arD1" style="${p('wl')}"></span><span class="ardot" id="arD2" style="${p('wr')}"></span>
+ <span class="arlab" id="arLW" style="${p('wlab')}">寬 0 cm</span>
+ <span class="arlab" id="arLD" style="${p('door')}"><i style="background:#FFD23F"></i>浴室門 80 cm</span>
+ <span class="arlab" id="arLT" style="${p('th')}"><i style="background:#FF9F1C"></i>門檻 2 cm</span>
+ <span class="arlab" id="arLO1" style="${p('o1')}"><i style="background:#3FA7FF"></i>插座</span>
+ <span class="arlab" id="arLO2" style="${p('o2')}"><i style="background:#3FA7FF"></i>插座</span>
+ <div class="reticle" id="arRet"></div></div>
+ <div class="artop"><div class="arhead"><button class="back" data-a="back" aria-label="返回">‹</button><b>AR 掃描場勘｜走廊</b><span class="artag">模擬示範</span></div>
+  <div class="seg armode arseg" role="group" aria-label="量測方式"><button data-armode="ar" aria-pressed="true">AR 掃描</button><button data-armode="manual" aria-pressed="false">手動輸入</button></div>
+  <div class="arprog"><div class="r"><span>本段已掃描</span><b id="arPct">0%</b></div><div class="pb"><i id="arBar"></i></div></div>
+  <div class="archips"><span id="arC1">對準走廊，準備開始掃描</span><span id="arC2" class="go" style="display:none">慢慢往前，對準門框</span></div></div>
+ <div class="arsheet" id="arSheet">${arSheetInner()}</div></div>`}
+function arSheetInner(){const t=S.arT||0,done=t>=AR_T,run=t>0&&!done;
+ return `<div class="arseg"><span class="dn">① 臥室 ✓</span><span class="${done?'dn':'cu'}">② 走廊${done?' ✓':''}</span><span class="${done?'dn':''}">③ 浴室門口${done?' ✓':''}</span></div>
+ ${done?`<div class="arres"><div class="row"><span>床邊到浴室走道寬</span><b>${AR_RES.corridor_cm} cm</b></div><div class="row"><span>浴室門檻高度</span><b>${AR_RES.threshold_cm} cm</b></div><div class="row"><span>床邊到浴室門口</span><b>約 ${AR_RES.bed_bath_m} 公尺</b></div><div class="row"><span>沿路插座</span><b>${AR_RES.outlets} 個</b></div></div>`:''}
+ ${run?'':'<div class="arnote">只保存尺寸，不保存影像；浴室只掃門口與走道。</div>'}
+ <button class="btn" data-a="${done?'arUse':'arScan'}" id="arBtn" ${run?'disabled':''}>${done?'帶入掃描結果':run?'掃描中…':'開始 AR 掃描'}</button>
+ ${run?'':`<button class="arlink" data-armode="manual">${done?'重新量測或改用手動輸入':'改用手動輸入'}</button>`}`}
+function arApply(t){const $=id=>document.getElementById(id);if(!$('arGrid'))return;
+ const c=(a,b)=>Math.max(0,Math.min(1,(t-a)/(b-a)));
+ $('arGrid').style.opacity=c(0.9,1.5);
+ const pct=t<=0?0:t<1.2?Math.round(c(0,1.2)*22):t<5.6?Math.round(22+c(1.2,5.6)*78):100;
+ $('arPct').textContent=pct+'%';$('arBar').style.width=pct+'%';
+ $('arC1').textContent=t<=0?'對準走廊，準備開始掃描':t<1.2?'移動手機，偵測地面與牆面…':'● 已偵測地面與牆面';
+ const c2=$('arC2');if(t>=5.6){c2.style.display='';c2.className='ok';c2.textContent='✓ 走廊量測完成'}else if(t>=3.2){c2.style.display='';c2.className='go';c2.textContent='慢慢往前，對準門框'}else c2.style.display='none';
+ const w=c(1.8,2.8),L=$('arLine');L.setAttribute('x2',ARP.wl[0]+(ARP.wr[0]-ARP.wl[0])*w);L.setAttribute('y2',ARP.wl[1]+(ARP.wr[1]-ARP.wl[1])*w);L.style.opacity=w>0?1:0;
+ $('arD1').style.opacity=w>0?1:0;$('arD2').style.opacity=w>=1?1:0;
+ const lw=$('arLW');lw.textContent='寬 '+Math.round(AR_RES.corridor_cm*w)+' cm';lw.classList.toggle('on',w>0);
+ $('arDoor').setAttribute('opacity',c(3.2,3.6));$('arLD').classList.toggle('on',t>=3.5);
+ $('arLT').classList.toggle('on',t>=4.3);$('arLO1').classList.toggle('on',t>=4.7);$('arLO2').classList.toggle('on',t>=5.0);
+ $('arRet').style.display=t>=5.6?'none':''}
+let arRaf=null;
+function arStart(){if(arRaf)return;const t0=performance.now();S.arT=0.001;const sh=document.getElementById('arSheet');if(sh)sh.innerHTML=arSheetInner();
+ const tick=now=>{S.arT=Math.min(AR_T,(now-t0)/1000);arApply(S.arT);
+  if(S.arT<AR_T)arRaf=requestAnimationFrame(tick);else{arRaf=null;const s2=document.getElementById('arSheet');if(s2)s2.innerHTML=arSheetInner()}};
+ arRaf=requestAnimationFrame(tick)}
+// 推薦頁：寫實室內設計圖（示意平面），依燈號替空間上色並標出夜間路線
+const HPJ={O:[620, 194.8687947858078],EX:[53.19165665853666, 34.190937838807855],EY:[0, -57.62520469000387],EZ:[-53.19165665853666, 34.190937838807855],FT:0.12};
+const HPV=[180.5,18.5,932.5,806.0];
+const HPR={bed:[0,0,4,3.5],bath:[4,0,6.2,3.5],ldy:[6.2,0,9,3.5],hall:[0,3.5,9,4.6],kit:[0,4.6,3.8,8],liv:[3.8,4.6,9,8],door:[7.2,8,9,9]};
+const HPN={'臥室':'bed','走道':'hall','浴室':'bath','廚房':'kit','客廳':'liv','門口':'door'};
+const HPC={r:'#D4003C',y:'#E0A030',g:'#138F3B',n:'#9A9893'};
+const hpp=(x,y,z)=>[HPJ.O[0]+x*HPJ.EX[0]+y*HPJ.EY[0]+z*HPJ.EZ[0],HPJ.O[1]+x*HPJ.EX[1]+y*HPJ.EY[1]+z*HPJ.EZ[1]];
+const hps=a=>a.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+function homePlanCard(L,path){if(!L||!L.length)return '';const FT=HPJ.FT;let g='',lab='';
+ for(const [n,c] of L){const id=HPN[n];if(!id)continue;const [x0,z0,x1,z1]=HPR[id],col=HPC[c]||HPC.n;
+  const q=[hpp(x0+.05,FT,z0+.05),hpp(x1-.05,FT,z0+.05),hpp(x1-.05,FT,z1-.05),hpp(x0+.05,FT,z1-.05)];
+  g+=`<polygon class="${c==='r'?'hpr':''}" points="${hps(q)}" fill="${col}" fill-opacity="${c==='g'?.2:.32}" stroke="${col}" stroke-width="5" stroke-linejoin="round"/>`;
+  const at={hall:[1.4,4.05],bath:[5.1,1.2],bed:[1.8,1.6],door:[8.1,8.5]}[id]||[(x0+x1)/2,(z0+z1)/2];const [lx,ly]=hpp(at[0],FT+1.1,at[1]);const w=n.length*30+58;
+  lab+=`<g transform="translate(${lx.toFixed(0)},${ly.toFixed(0)})"><rect x="${-w/2}" y="-22" width="${w}" height="44" rx="22" fill="#fff" stroke="rgba(0,0,0,.12)"/><circle cx="${-w/2+24}" cy="0" r="9" fill="${col}"/><text x="${-w/2+42}" y="10" font-size="28" font-weight="700" fill="#2B2B29">${n}</text></g>`}
+ if(path){const pts=[[2.85,1.4],[3.05,2.6],[3.45,3.5],[3.6,4.05],[4.8,4.05],[5.0,3.5],[4.9,2.3],[4.75,1.3]].map(([x,z])=>hpp(x,FT+.02,z));
+  g+=`<polyline points="${hps(pts)}" fill="none" stroke="#fff" stroke-width="14" stroke-dasharray="1 16" stroke-linecap="round"/><polyline points="${hps(pts)}" fill="none" stroke="#B80C40" stroke-width="8" stroke-dasharray="1 16" stroke-linecap="round"/>`;
+  for(const [x,z] of [[3.08,1.0],[4.2,3.66],[5.3,3.25]]){const [px,py]=hpp(x,FT+.3,z);g+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="20" fill="#FFC24A" fill-opacity=".35"/><circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="8" fill="#FFC24A" stroke="#fff" stroke-width="3"/>`}}
+ return `<div class="card hplan"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>居家安全地圖</b><span class="muted" style="font-size:.85em">${EN()}家｜平面為示意</span></div>
+ <div class="hpw"><img src="home/plan.jpg" alt="${EN()}家的室內設計圖，依燈號標示各空間風險"><svg viewBox="${HPV.join(' ')}" aria-hidden="true">${g}${lab}</svg></div>
+ <div class="muted" style="font-size:.85em;margin-top:6px">${path?'虛線：床邊到浴室的夜間路線；黃點：建議的感應夜燈位置':'依 AR 場勘與問答標示各空間燈號'}</div></div>`}
+const HERO_IMG='data:image/jpeg;base64,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';
+const QS={live:'您目前的居住狀況？',night:'您晚上會起床上廁所嗎？',light:'從臥室走到浴室，晚上夠亮嗎？',phone:'您平常怎麼用手機？',worry:'您最擔心在家發生什麼事？'};
+const Q=[
+ {k:'live',q:'長輩目前的居住狀況？',o:['剛開始一個人住','一個人住超過一年','和家人同住']},
+ {k:'night',q:'長輩晚上會起床上廁所嗎？',o:['不會','一晚一次','一晚兩次以上','不清楚']},
+ {k:'light',q:'臥室到浴室的走廊，晚上夠亮嗎？',o:['夠亮','偏暗','不清楚']},
+ {k:'phone',q:'長輩平常怎麼用手機？',o:['會用 LINE','只會接電話','幾乎不用']},
+ {k:'worry',q:'您最擔心長輩在家發生什麼事？',o:['夜間跌倒沒人知道','忘記關火或用電安全','身體不舒服沒人發現','接到詐騙電話']}
+];
+const icon={
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>',
+ news:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4l10 4V6L4 10z"/><path d="M18 9a3 3 0 010 6"/></svg>',
+ pay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></svg>',
+ cart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2 11h11l2-8H7"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg>',
+ user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>'
+};
+function go(v){if(v!=='c1'&&v!=='c2'&&v!=='c3')S.fromLog=false;if(v==='b4'){S.slots=null;S.slot=null}S.stack.push(v);render();if(LOAD[v])LOAD[v]().then(()=>{if(S.stack[S.stack.length-1]===v)render()}).catch(e=>toast(e.message))}
+function back(){if(S.stack.length>1){S.stack.pop();render()}}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2400)}
+function hdr(t,{back:b=true,aplus=true}={}){return `<div class="top">${b?'<button class="back" data-a="back" aria-label="返回">‹</button>':''}<h1>${t}</h1>${aplus?`<button class="aplus" data-a="big" aria-pressed="${S.big}">大字</button>`:''}</div>`}
+function homeNav(){const it=[['home','首頁'],['news','最新'],['pay','行動支付'],['cart','線上購物'],['m1','會員中心']];return `<nav class="nav" aria-label="主選單" style="padding:0;position:relative;display:block;border-top:0"><img src="home/nav.png" alt="" style="display:block;width:100%"><div style="position:absolute;inset:0;display:flex">${it.map(([k,l])=>`<button data-nav="${k}" aria-label="${l}" ${k==='home'?'aria-current="page"':''} style="flex:1;background:transparent;border:0"></button>`).join('')}</div></nav>`}
+function nav(cur){const it=[['home','首頁',icon.home],['news','最新',icon.news],['pay','行動支付',icon.pay],['cart','線上購物',icon.cart],['m1','會員中心',icon.user]];
+ return `<nav class="nav" aria-label="主選單">${it.map(([k,l,i])=>`<button data-nav="${k}" ${cur===k?'aria-current="page"':''}>${i}<span>${l}</span></button>`).join('')}</nav>`}
+const V={
+boot:()=>`<div class="ld">載入中…</div>`,
+login:()=>`<div class="top"><h1 style="color:var(--brand)">全國電子</h1></div><div class="scroll" style="padding-top:18px"><div class="pad">
+ <div class="lgh"><span class="eh">♥</span><div><div class="big" style="margin:0">登入揪居家</div><div class="muted">子女、長輩家人與門市夥伴共用同一個 App</div></div></div>
+ <form id="loginForm" class="card" style="margin:14px 0 10px" novalidate>
+  <label class="muted">Email<input class="fld" id="lgEmail" name="email" type="email" autocomplete="username" inputmode="email" required></label>
+  <label class="muted" style="display:block;margin-top:10px">密碼<input class="fld" id="lgPw" name="password" type="password" autocomplete="current-password" required></label>
+  <div class="err" role="alert"></div>
+  <button class="btn" id="lgBtn" type="submit" style="margin-top:12px">登入</button>
+ </form>
+ <button class="btn ghost" data-go="register">第一次使用？建立家庭帳號</button>
+ <p class="muted" style="text-align:center">忘記密碼請洽綁定門市，由門市協助重設。<br>門市夥伴帳號由總部建立。</p>
+ ${demoBox()}
+</div></div>`,
+register:()=>{const st=(S.cfg&&S.cfg.stores)||[];return `${hdr('建立家庭帳號',{aplus:false})}<div class="scroll" style="padding-top:12px"><div class="pad">
+ <form id="regForm" class="card" style="margin:0 0 10px" novalidate>
+  <label class="muted">您的稱呼<input class="fld" name="name" autocomplete="name" placeholder="例如：王小姐" required></label>
+  <label class="muted" style="display:block;margin-top:10px">Email<input class="fld" name="email" type="email" autocomplete="email" inputmode="email" required></label>
+  <label class="muted" style="display:block;margin-top:10px">密碼（至少 8 個字元）<input class="fld" name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+  <div class="sec" style="padding:16px 0 4px">要照顧的長輩</div>
+  <label class="muted">長輩的稱呼<input class="fld" name="elder_name" placeholder="例如：張媽媽" required></label>
+  <label class="muted" style="display:block;margin-top:10px">長輩狀況（選填）<input class="fld" name="elder_note" placeholder="例如：74 歲，剛開始一個人住"></label>
+  <label class="muted" style="display:block;margin-top:10px">綁定門市<select class="fld" name="store">${st.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('')}</select></label>
+  <div class="sec" style="padding:16px 0 4px">或加入家人已建立的家庭</div>
+  <label class="muted">邀請碼（選填，填了就不用填長輩資料）<input class="fld" name="invite" autocapitalize="characters" placeholder="6 碼，例如：A1B2C3"></label>
+  <div class="err" role="alert"></div>
+  <button class="btn" type="submit" style="margin-top:12px">建立帳號並登入</button>
+  <p class="muted" style="margin:10px 0 0">建立帳號即表示同意服務條款與資料使用說明：資料只用於提供居家建議與服務，只有您的家人與綁定門市看得到。</p>
+ </form></div></div>`},
+pw:()=>`${hdr('變更密碼',{aplus:false})}<div class="scroll" style="padding-top:12px"><div class="pad"><form id="pwForm" class="card" style="margin:0" novalidate>
+ <label class="muted">目前密碼<input class="fld" name="old" type="password" autocomplete="current-password" required></label>
+ <label class="muted" style="display:block;margin-top:10px">新密碼（至少 8 個字元）<input class="fld" name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+ <div class="err" role="alert"></div><button class="btn" type="submit" style="margin-top:12px">更新密碼</button></form>
+ <p class="muted">員工收到總部給的臨時密碼後，請在這裡改成自己的密碼。</p></div></div>`,
+b1:()=>`${hdr('揪居家｜居家安全評估')}<div class="scroll" style="padding-top:12px">
+ <div class="card"><div class="big">約 5 分鐘，了解${EN()}家的需要</div>
+ <div class="row"><span>免費，不需要購買任何設備</span></div><div class="row"><span>先用手機 AR 場勘量走道與門檻，再回答全國電子 AI 顧問阿國 5 題</span></div><div class="row"><b>長輩不需要操作任何東西</b></div></div>
+ <div class="card c3"><b>同一位生活顧問陪你的家，從居家安全開始</b>
+ <div class="row"><span class="n3">①</span><span><b style="font-weight:500">先評估</b><div class="muted" style="font-size:.88em">AR 掃描場勘量尺寸、標位置；全國電子 AI 顧問阿國依診斷推薦方案；居安規劃師把家電與無障礙改善整合成一張報價</div></span></div>
+ <div class="row"><span class="n3">②</span><span><b style="font-weight:500">再改善</b><div class="muted" style="font-size:.88em">統一排程、合併到府安裝，完工驗收並教長輩按「我很好」</div></span></div>
+ <div class="row"><span class="n3">③</span><span><b style="font-weight:500">後關心</b><div class="muted" style="font-size:.88em">長輩關懷不裝鏡頭，異常先問長輩，每週語音電話</div></span></div></div>
+ <div class="muted" style="font-size:.88em;margin:0 16px 12px;line-height:1.5">之後還可以逐步加購四層服務（保養、更多空間到換機）；找不到的商品也能用揪心願說出來。</div>
+ <div class="sec">這次由誰填寫？</div>
+ <div class="pad"><button class="btn" data-a="loginChild">幫長輩填（我是子女）</button><button class="btn ghost" data-a="loginSelf">我是長輩本人（自動大字模式）</button><p class="muted" style="text-align:center">資料只給您的家人與綁定門市；也可以直接到門市，由顧問陪同填寫</p></div></div>`,
+ar:()=>{if((S.armode||'ar')==='ar')return arViewHTML();const m=S.meas,R=(S.cfg&&S.cfg.measure_range)||{};const f=(k,l,u,ph,step)=>`<label class="mf"><span>${l}</span><span class="unit"><input class="fld" id="m_${k}" data-meas="${k}" type="number" inputmode="decimal" min="${(R[k]||[])[0]??''}" max="${(R[k]||[])[1]??''}" step="${step}" value="${esc(m[k]??'')}" placeholder="${ph}"><i>${u}</i></span></label>`;
+ return `${hdr('AR 掃描場勘',{aplus:true})}<div class="scroll" style="padding-top:12px">
+ <div class="pad"><div class="muted" style="margin-bottom:6px">步驟 1／2｜先量${EN()}家的夜間動線</div><div class="bar" aria-hidden="true"><i style="width:30%"></i></div></div>
+ <div class="pad" style="margin-top:10px"><div class="seg armode" role="group" aria-label="量測方式"><button data-armode="ar" aria-pressed="false">AR 掃描</button><button data-armode="manual" aria-pressed="true">手動輸入</button></div></div>
+ <div class="card" style="margin-top:12px">${AR_SVG}<div class="muted" style="font-size:.85em;margin-top:6px">從床邊走到浴室門口，量 A 走道寬度、B 浴室門檻高度、C 距離，也數一下沿路有幾個插座。</div></div>
+ <div class="card"><div class="meas">${f('corridor_cm','A｜走道寬度','cm','例如 92','1')}${f('threshold_cm','B｜浴室門檻高度','cm','例如 2','0.5')}${f('bed_bath_m','C｜床邊到浴室門口','公尺','例如 5','0.5')}</div>
+  <div class="mf" style="margin-top:12px"><span>沿路可用的插座</span><div style="margin-top:6px">${[['0','沒有'],['1','1 個'],['2','2 個以上']].map(([v,l])=>`<button class="chip" data-outlet="${v}" aria-pressed="${String(m.outlets??'')===v}">${l}</button>`).join('')}</div></div>
+  <div class="okbox" style="background:var(--note);color:var(--muted)">AR 掃描目前為模擬示範；正式版接手機 AR 掃描，結果一樣帶入這裡，也可用捲尺量好後輸入。只記錄尺寸，不拍人、不存影像。</div></div>
+ <div class="pad"><button class="btn" data-a="arNext">下一步：全國電子 AI 顧問阿國問答</button><button class="btn ghost" data-a="arSkip">先略過，到門市再請顧問量</button></div></div>`},
+b2:()=>{const i=S.qi||0,q=Q[i],sel=S.ans[q.k],qt=S.self?QS[q.k]:q.q;return `${hdr('全國電子 AI 顧問阿國居家診斷',{aplus:true})}<div class="scroll" style="padding-top:14px"><div class="pad">
+ <div class="muted" style="margin-bottom:6px">步驟 2／2｜第 ${i+1} 題，共 ${Q.length} 題</div><div class="bar" aria-hidden="true"><i style="width:${30+(i+1)/Q.length*70}%"></i></div>
+ <div class="agline"><span class="agav">✦</span><span class="muted">全國電子 AI 顧問阿國問</span></div>
+ <div class="big" style="margin:6px 0 14px">${qt}</div>
+ ${q.o.map(o=>`<button class="opt" data-ans="${o}" aria-pressed="${sel===o}">${o}</button>`).join('')}
+ ${i===0?'<p class="muted">家中家電會由您的購買紀錄自動帶入，不用另外填寫。</p>':''}
+ <div style="display:flex;gap:10px;margin-top:8px"><button class="btn ghost" style="margin:0" data-a="prev" ${i===0?'disabled':''}>上一題</button><button class="btn" data-a="next" ${sel?'':'disabled'}>${i===Q.length-1?'看全國電子 AI 顧問阿國推薦':'下一題'}</button></div>
+ ${sel?'':'<p class="muted" style="text-align:center;margin-top:8px">請先選擇一個答案</p>'}
+ </div></div>`},
+b3:()=>{const as=S.hh&&S.hh.assessment;if(!as)return V.b1();const r=as.rec,m=as.measures||{},dv=DEV(true).filter(d=>d.warn&&d.source==='購買紀錄');
+ return `${hdr('全國電子 AI 顧問阿國推薦',{aplus:true})}<div class="scroll" style="padding-top:12px">
+ <div class="pad"><div class="muted">${as.filled_by==='self'?'為您推薦':'為'+EN()+'推薦'}｜${esc(r.scene)}場域</div><div class="big">${esc(r.n)}</div></div>
+ <div class="card" style="background:var(--brand-soft);color:var(--brand-ink)">${esc(r.why)}${(r.notes||[]).map(n=>`<div style="margin-top:6px;font-size:.92em">${esc(n)}</div>`).join('')}</div>
+ ${lightsCard(as.lights)}
+ ${homePlanCard(as.lights,r.path)}
+ <div class="card">${r.items.map(([a,b])=>`<div class="row"><span>${esc(a)}</span><b style="font-weight:500;text-align:right">${esc(b)}</b></div>`).join('')}
+  <div style="margin-top:10px"><span class="tag ok">整組不含鏡頭</span></div><div class="muted" style="font-size:.85em;margin-top:6px">擴展期可加購「緊急查看」：平時不看影像，長輩沒回應時家屬才能查看約 30 秒，須長輩事先書面同意</div></div>
+ ${Object.keys(m).length?`<div class="card"><b>AR 場勘量測</b>${measRows(m)}</div>`:''}
+ <div class="card" style="display:flex;gap:12px;align-items:center"><svg viewBox="0 0 90 90" width="78" height="78" role="img"><title>您的揪居家同心圓</title><circle cx="45" cy="45" r="43" fill="none" stroke="#8A8983" stroke-width="1"/><circle cx="45" cy="45" r="32" fill="#E69A1E" fill-opacity=".22" stroke="#E69A1E" stroke-width="1"/><circle cx="45" cy="45" r="21" fill="#B80C40" fill-opacity=".22" stroke="#B80C40" stroke-width="1"/><circle cx="45" cy="45" r="10" fill="#D4003C" fill-opacity=".45" stroke="#D4003C" stroke-width="1"/></svg><div class="muted" style="font-size:.88em;line-height:1.7"><div><b style="color:#D4003C">●</b> 家電檔案（免費）</div><div><b style="color:#B80C40">●</b> 家電保養：依家電狀況</div><div><b style="color:#E69A1E">●</b> 長輩關懷：${esc(r.n)}</div><div>○ 家電換新：擴展期開放</div></div></div>
+ <div class="card" style="background:var(--note)"><b>下一步：到門市做居安規劃</b><div class="muted" style="margin-top:4px">診斷與 AR 場勘結果會自動帶給生活顧問；居安規劃師把家電與無障礙改善整合成一張報價，到店不用再講一次。</div></div>
+ ${dv.length?`<div class="card"><b>順便看看家裡的家電</b>${dv.map(d=>`<div class="muted" style="margin-top:4px">${esc(d.name)}：${esc(d.status)}${d.years?'（使用 '+d.years+' 年）':''}</div>`).join('')}</div>`:''}
+ <div class="pad">${S.ph>=2?'<button class="btn" data-go="m2">到「我的家」看方案</button>':`<button class="btn" data-go="b4">${S.booked?'更改門市預約':'預約門市免費諮詢'}</button>`}<button class="btn ghost" data-a="save">先存到「我的家」</button>${S.ph<2?'<button class="btn ghost" data-a="redo">重新做一次評估</button>':''}</div></div>`},
+b4:()=>{const stores=(S.cfg&&S.cfg.stores)||[],st=S.store||(S.hh&&S.hh.household.store)||(stores[0]&&stores[0].name),sl=S.slot,L=S.slots;return `${hdr('預約門市諮詢')}<div class="scroll" style="padding-top:12px">
+ <div class="sec">選擇門市</div>
+ ${stores.map(s=>`<button class="card opt" style="width:calc(100% - 24px);margin:0 12px 10px" data-store="${esc(s.name)}" aria-pressed="${st===s.name}"><b>${esc(s.name)}</b><div class="muted">${esc(s.note)}${S.hh&&S.hh.household.store===s.name?'｜綁定門市':''}</div></button>`).join('')}
+ <div class="sec">你的生活顧問</div>${advCard(st)}
+ <div class="sec">選擇時段</div><div class="pad" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+ ${L?(L.length?L.map(x=>`<button class="slot" data-slot="${x.slot}" aria-pressed="${sl===x.slot}" ${x.full?'disabled':''}>${esc(x.label)}${x.full?'<br>額滿':''}</button>`).join(''):'<div class="muted">近期沒有可預約的時段，請改選其他門市。</div>'):'<div class="muted">讀取可預約時段…</div>'}</div>
+ <div class="card" style="margin-top:14px;background:var(--note)">您的 AR 場勘與診斷結果會自動帶給門市顧問，到店不用再講一次。歡迎邀請長輩一同到店，親自確認設備不含鏡頭。</div>
+ <div class="pad"><button class="btn" data-a="book" ${sl?'':'disabled'}>確認預約</button></div></div>`},
+b5:()=>`${hdr('預約完成',{back:false})}<div class="scroll" style="padding-top:20px">
+ <div class="pad" style="text-align:center"><div style="width:64px;height:64px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:30px">✓</div><div class="big">預約完成</div></div>
+ <div class="card"><b>${esc(S.booked?S.booked.store:'')}｜${esc(S.booked?S.booked.slot:'')}</b><div class="muted" style="margin-top:4px">預約已送到門市，生活顧問會依您的診斷結果先做準備；可以在「我的家」查看或更改。</div></div>
+ <div class="sec">你的生活顧問</div>${advCard(S.booked?S.booked.store:'',true)}<div class="pad"><button class="btn ghost" data-a="lineAdv">請生活顧問聯絡我</button></div>
+ <div class="pad"><button class="btn" data-a="toHome2">到「我的家」看看</button><button class="btn ghost" data-nav="home">回首頁</button></div></div>`,
+m1:()=>{const g=J()?['關懷中','ok']:S.ph>=3?['安裝中','']:S.ph===2?['方案待確認','']:S.booked?['待門市諮詢','']:['尚未啟用','mu'];const h=S.hh.household,wr=S.hh.devices.filter(d=>d.warn&&String(d.status).includes('保固'));
+ const R=(go,t,sub,right)=>`<button class="row" ${go} style="width:100%;text-align:left"><span>${t}${sub?`<span class="muted" style="display:block;font-size:.85em">${sub}</span>`:''}</span><span style="display:flex;align-items:center;gap:6px;flex:none">${right||''}<span class="chev">›</span></span></button>`;
+ const T=(t,c)=>`<span class="tag ${c==='ok'?'ok':''}" ${c==='mu'?'style="background:var(--bg);color:var(--muted)"':''}>${t}</span>`;
+ return `${hdr('會員中心',{back:false})}<div class="scroll">
+ <div class="card" style="margin-top:12px;display:flex;align-items:center;gap:12px"><div class="avt" style="background:var(--brand)">${esc(S.me.name.slice(0,1))}</div><div style="flex:1;min-width:0"><b style="font-size:1.1em">${esc(S.me.name)}</b><div class="muted" style="font-size:.88em;overflow-wrap:anywhere">${esc(S.me.email)}｜綁定門市 ${esc(h.store)}</div></div></div>
+ <div style="display:flex;gap:10px;padding:0 12px 12px"><div class="card" style="flex:1;margin:0"><div class="muted">會員點數</div><b>0 點</b></div><div class="card" style="flex:1;margin:0"><div class="muted">會員折價券</div><b>0 張</b></div></div>
+ <div class="sec">我的家</div><div class="card" style="padding:4px 14px">
+  ${R('data-go="m2"','家電檔案','我家、長輩家｜購買紀錄自動帶入','')}
+  ${R('data-go="m2"','家人關懷',EN()+'家',T(g[0],g[1]))}
+  ${R('data-go="fam"','家庭成員','誰能看到什麼，由長輩決定','')}
+  ${J()?R('data-go="msum"','每月摘要','關懷狀況與兩個家的家電提醒',''):''}</div>
+ <div class="sec">保固補貼＆線上報修</div><div class="card" style="padding:4px 14px">
+  ${R('data-go="m2"','保固清單',wr.length?esc(wr.map(d=>d.name+d.status).join('、')):'目前沒有即將到期的保固',wr.length?T(wr.length+' 項即將到期'):'')}
+  ${R('data-a="repairList"','線上報修清單','維持原 App 功能','')}</div>
+ <div class="sec">一般設定</div><div class="card" style="padding:4px 14px">
+  ${R('data-a="big"','大字模式','放大全部文字，方便長輩閱讀',T(S.big?'已開啟':'關閉',S.big?'ok':'mu'))}
+  ${R('data-a="guide"','操作提示','每一步提示可以做什麼',T(S.guide?'已開啟':'關閉',S.guide?'ok':'mu'))}
+  ${R('data-go="nset"','通知設定','異常通知、每月摘要','')}
+  ${R('data-go="pw"','變更密碼','','')}
+  ${R('data-a="logout"','登出','','')}</div>
+ </div>${nav('m1')}`},
+home:()=>{const I=(d)=>`<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#D4003C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+ const G=[['減碳貢獻','<path d="M12 20v-7"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 13c0-3-2-5-6-5 0 3 2 5 6 5z"/>'],['店長推薦','<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 16v-5l3-4 1 1-1 3h4l-1 5H9z"/>'],['保固服務','<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'],['門市查詢','<path d="M12 21s-6-6-6-11a6 6 0 0112 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>'],['影音專區','<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M10 9l5 2-5 2z"/><path d="M6 20h6"/>'],['空調推薦','<rect x="3" y="6" width="18" height="7" rx="2"/><path d="M7 16v3M12 16v3M17 16v3"/>'],['電視推薦','<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 20h8"/>'],['線上報修','<path d="M14 7l3-3 3 3-3 3"/><path d="M17 4L8 13"/><path d="M4 20l5-5"/><path d="M6 9l9 9"/>']];
+ const R=[['登錄活動','<path d="M4 9l8-4 8 4-8 4z"/><path d="M4 9v7l8 4 8-4V9"/>'],['當期活動','<path d="M4 12l8-8h6v6l-8 8z"/><path d="M9 11l4 4"/>'],['線上DM','<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'],['活動報名','<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="M9 15l2 2 4-4"/>']];
+ const H=S.hh,dvc=H.devices.filter(d=>d.home==='parents'),wn=dvc.filter(d=>d.warn).length,ins=H.install;
+ const st=J()?['關懷中','長輩家：'+dvc.length+' 項家電與設備'+(wn?'，'+wn+' 項待處理':''),'m2']:S.ph>=3?['安裝中',ins&&ins.slot?'長輩家：'+ins.label+' 到府安裝':'長輩家：等待門市排定到府時間','m2']:S.ph===2?['方案待確認','生活顧問已傳送專屬方案','m2']:S.booked?['已預約','長輩家：'+S.booked.slot+' 門市諮詢','m2']:S.saved?['已評估','全國電子 AI 顧問阿國推薦：'+H.assessment.rec.n,'b3']:['','從居家安全開始，陪一家三代顧好一個家','b1'];
+ return `<div style="position:relative;flex:none;background:#fff"><img src="home/header.png" alt="全國電子" style="display:block;width:100%"><button class="aplus" data-a="big" aria-pressed="${S.big}" style="position:absolute;top:50%;transform:translateY(-50%);left:54.4%;border:1px solid #DCDCDC;border-radius:13px;background:#fff;color:#4C5058;font-size:13px;padding:2px 10px;min-height:0">大字</button></div><div class="scroll">
+ ${LS.get('jjj_onboard_done')?'':`<div class="card onb" style="margin-top:12px;border-left:4px solid var(--brand)"><b>歡迎，${esc(S.me.name)}</b><div class="muted" style="margin:4px 0 8px">揪居家三步驟：① 先評估（AR 場勘、全國電子 AI 顧問阿國推薦、居安規劃）→ ② 再改善（到府安裝）→ ③ 後關心（長輩關懷）。從下方的全國電子 AI 顧問阿國開始。</div><button class="tag" data-a="onbDone">知道了</button></div>`}
+ <img src="home/banner.png" alt="活動橫幅" style="display:block;width:100%"><img src="home/member.png" alt="會員點數與折價券" style="display:block;width:100%">
+ <button class="entry" data-go="${st[2]}" aria-label="揪居家：${st[1]}"><span class="eh"><svg width="24" height="24" viewBox="0 0 32 32" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 14L16 4.5 27.5 14" stroke="#8C9096"/><circle cx="10" cy="17" r="2.2" stroke="#D4003C"/><path d="M6.5 27v-2.5a3.5 3.5 0 017 0V27" stroke="#D4003C"/><circle cx="17" cy="16" r="2.6" stroke="#8C9096"/><path d="M13 27v-3a4 4 0 018 0v3" stroke="#8C9096"/><circle cx="23.5" cy="20" r="1.7" stroke="#D4003C"/><path d="M21 27v-1.5a2.5 2.5 0 015 0V27" stroke="#D4003C"/></svg></span><span style="flex:1;min-width:0"><b>揪居家</b>${st[0]?`<span class="tag ${J()?'ok':''}" style="margin-left:6px">${st[0]}</span>`:''}<span class="es">${st[1]}</span></span><span class="chev">›</span></button>
+ <div class="card agq" style="margin-top:0;border:2px solid var(--brand);border-radius:14px;display:flex;gap:10px;align-items:flex-start"><span style="flex:none;width:34px;height:34px;border-radius:50%;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:16px"><svg width="24" height="24" viewBox="0 0 32 32" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="13" r="5.5" stroke="#8C9096"/><path d="M6.5 27.5a9.5 9.5 0 0119 0" stroke="#8C9096"/><path d="M9.5 14v-1.5a6.5 6.5 0 0113 0V14" stroke="#D4003C"/><path d="M22.5 14v2.2a2.3 2.3 0 01-2.3 2.3H18" stroke="#D4003C"/><path d="M26.5 2.5c.3 2.1 1 2.8 3.1 3.1-2.1.3-2.8 1-3.1 3.1-.3-2.1-1-2.8-3.1-3.1 2.1-.3 2.8-1 3.1-3.1z" fill="#D4003C" stroke="none"/></svg></span><div style="flex:1;min-width:0"><b>全國電子 AI 顧問阿國</b><div class="muted" style="font-size:.88em;margin-top:2px;line-height:1.45">我是全國電子 AI 顧問阿國。爸媽開始一個人住？先做 5 分鐘居家診斷。</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"><button class="tag" data-go="b1" style="background:var(--brand);color:#fff">幫長輩家做居家診斷 ›</button><span class="tag" style="background:var(--bg);color:var(--muted)">推薦熱銷冰箱</span><span class="tag" style="background:var(--bg);color:var(--muted)">廚房熱銷家電</span></div></div></div>
+ <img src="home/grid.png" alt="功能選單" style="display:block;width:100%;margin-top:12px"><img src="home/act.png" alt="活動專區" style="display:block;width:100%">
+ <div class="sec">分享好生活</div>
+ <button class="card" data-go="b1" style="display:block;width:calc(100% - 24px);text-align:left"><div style="background:var(--note);height:84px;border-radius:10px;margin-bottom:10px"></div><div style="color:var(--brand);font-size:12px">居家知識</div><b>爸媽開始一個人住，家裡這 3 個地方要先注意</b><div class="muted" style="margin-top:6px">免費居家診斷 ›</div></button>
+ <button class="card" data-go="b1" style="display:block;width:calc(100% - 24px);text-align:left"><div style="background:#2C3E5C;color:#fff;height:84px;border-radius:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-size:13px">▶ 每月教學直播（示意）</div><div style="color:var(--brand);font-size:12px">門市人物圖鑑｜長輩的關懷者</div><b>顧問教你：夜間走廊這樣亮，爸媽不摸黑</b><div class="muted" style="margin-top:6px">看完做居家診斷 ›</div></button>
+ </div>${homeNav()}`},
+m2:()=>{const p=S.home==='parents',H=S.hh,h=H.household,fm=S.famMine||{},dv=DEV(p),warn=dv.filter(d=>d.warn),old=dv.find(d=>d.old&&d.kwh),eco=ecoEst(H.devices);
+ return `${hdr('我的家')}<div class="scroll">
+ <div class="tabs" role="tablist"><button role="tab" aria-selected="${!p}" data-home="mine">我家</button><button role="tab" aria-selected="${p}" data-home="parents">長輩家</button></div>
+ ${p?topCard():''}
+ ${p&&eco?`<div class="card esg" style="background:var(--ok-soft)"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b style="color:var(--ok)">兩個家的永續貢獻</b><span class="muted" style="font-size:.8em">延伸會員 ESG 儀表板</span></div><div style="margin-top:6px">1 級能效家電每年約減碳 <b>${eco} kg</b>（估算）</div><div class="muted" style="font-size:.85em;margin-top:4px">以 1 級能效約省一半用電、每度電約 0.47 公斤碳排估算；完成保養與舊機回收後也會累計在這裡。</div></div>`:''}
+ <div class="sec">待處理</div><div class="card" style="padding:4px 14px;border-left:4px solid var(--brand)">
+ ${warn.length?warn.map(d=>{const q=devReq(d);return `<div class="row"><span>${esc(d.name)}<span class="muted" style="display:block;font-size:.85em">${esc(d.status)}${d.years?'｜使用 '+d.years+' 年':''}</span></span><button class="tag" data-req="${q[0]}">${q[1]}</button></div>`}).join(''):'<div class="row"><span class="muted">目前沒有待處理項目</span></div>'}</div>
+ <div class="sec">家電清單</div><div class="card" style="padding:4px 14px">
+ ${dv.length?dv.map(d=>`<button class="row" data-hc="${d.id}" style="width:100%"><span>${esc(d.name)}${d.qty>1?' ×'+d.qty:''}<span class="muted" style="display:block;font-size:.85em">${d.source==='到府安裝'?'關懷設備｜'+esc(d.warranty||''):(d.grade?d.grade+' 級能效・':'')+(d.years!=null?'使用 '+d.years+' 年':'')}</span></span>${d.warn?`<span class="tag">${esc(d.status)} <span class="chev">›</span></span>`:`<span class="muted">${esc(d.status||'')} <span class="chev">›</span></span>`}</button>`).join(''):'<div class="row"><span class="muted">尚無家電資料。於全國電子購買或請門市登錄後，會自動出現在這裡。</span></div>'}</div>
+ ${old?`<div class="card" style="background:var(--ok-soft)"><b style="color:var(--ok)">省電小結（估算）</b><div style="margin-top:2px">${esc(old.name)}若換成 1 級能效，每年約可省 <b>${Math.round(old.kwh/2)} 度電</b>，約 NT$${(Math.round(old.kwh/2)*4).toLocaleString()} 電費。</div><div class="muted" style="font-size:.85em;margin-top:4px">依經濟部能源署「老舊冷氣冰箱換 1 級約省一半用電」估算，實際依使用習慣而定。</div></div>`:''}
+ ${p?`<div class="sec">關懷設定</div><div class="card" style="padding:4px 14px">
+  <button class="row" data-go="nset" style="width:100%"><span>通知設定</span><span class="muted">每月摘要、每日平安 <span class="chev">›</span></span></button>
+  ${S.ph>=2?'<button class="row" data-go="pl" style="width:100%"><span>專屬方案（生活顧問）</span><span class="muted">'+(S.ph>=3?'已確認':'待確認')+' <span class="chev">›</span></span></button>':''}${S.ph>=3?'<button class="row" data-go="ip" style="width:100%"><span>安裝進度與紀錄</span><span class="muted">'+(J()?'已完工':(H.install&&H.install.slot?esc(H.install.label.split('）')[0])+'）到府':'待排程'))+' <span class="chev">›</span></span></button>':''}${J()?'<button class="row" data-go="gl" style="width:100%"><span>關懷紀錄</span><span class="muted">'+(H.care.length?esc(H.care[0].when.split(' ')[0])+' '+H.care.length+' 筆':'目前平安')+' <span class="chev">›</span></span></button>':''}
+  <button class="row" data-go="plan" style="width:100%"><span>關懷方案</span><span class="muted">${J()&&H.plan?esc(planName(H.plan.plan).split('｜')[0])+'｜月付':'尚未啟用'} <span class="chev">›</span></span></button></div>
+ <div class="sec">家庭成員（一家三代）</div><div class="card" style="padding:4px 14px">
+  <button class="row" data-a="consent" style="width:100%"><span><b>${EN()}</b>｜長輩</span><span><span class="tag ${S.ph>=3?'ok':''}">${S.ph>=3?'已同意':'待門市確認'}</span> <span class="chev">${S.consent?'⌃':'›'}</span></span></button>
+  ${S.consent?`<div class="muted" style="font-size:.88em;padding:6px 0 8px;border-bottom:1px solid var(--line)">${S.ph>=3&&H.plan&&H.plan.confirmed_at?esc(H.plan.confirmed_at.slice(5,10).replace('-','/'))+' 確認方案時，由'+EN()+'本人同意。':'將於門市諮詢時，由'+EN()+'本人確認設備不含鏡頭並同意。'}誰能看到作息由${EN()}決定，可隨時到門市或請家人協助調整。</div>`:''}
+  ${H.members.map(x=>`<div class="row"><span><b>${esc(x.name)}</b>｜${esc(x.relation)}</span><span class="muted">${x.relation==='管理者'?'接收異常通知':'App 帳號'}</span></div>`).join('')}
+  ${(h.contacts||[]).map(c=>`<div class="row"><span><b>${esc(c.n)}</b>｜${esc(c.r)}</span><span class="muted">${esc(c.d||'')}</span></div>`).join('')}
+  <div class="muted" style="padding:8px 0 4px">誰能看到作息，由${EN()}決定；未成年成員不接收異常通知。</div>
+  <button class="btn ghost" data-a="invite" style="margin:4px 0 10px">邀請家人加入</button>${S.invite?`<div class="okbox" style="margin:0 0 10px">邀請碼 <b style="letter-spacing:2px">${esc(S.invite)}</b>：家人註冊時輸入就能加入，7 天內有效。</div>`:''}</div>`
+ :`<div class="sec">家庭組成（選填）</div><div class="card"><div class="muted" style="margin-bottom:8px">自願填寫，只用於推薦適合您家的服務，可隨時修改。</div>
+  ${['學齡前孩子','國小以上孩子','寵物','以上皆無'].map(f=>`<button class="slot" style="margin:0 6px 8px 0" data-fam="${f}" aria-pressed="${!!fm[f]}">${f}</button>`).join('')}</div>`}
+ <div class="sec">校園大使任務</div><button class="card" data-go="obs" style="display:block;width:calc(100% - 24px);text-align:left;border-left:4px solid #2B5C9E"><b>居家觀察｜15 分鐘</b><div class="muted" style="font-size:.9em">${S.obsDone?"已完成，查看居家安全檢核結果":"和家人一起看看長輩家，產生居家安全檢核結果"}</div></button>
+ <div class="sec">揪心願</div><div class="card"><div class="muted" style="margin-bottom:8px">家裡還需要什麼？說給我們聽，總部會整理成新的方案或服務。</div>
+  ${(H.wishes||[]).map(w=>`<div class="row" style="align-items:flex-start"><span>${esc(w.text)}${w.reply?`<span class="muted" style="display:block;font-size:.85em">門市回覆：${esc(w.reply)}</span>`:''}</span><span class="tag ${w.status==='已回覆'?'ok':''}">${w.status==='已回覆'?'門市已回覆':'已送出'}</span></div>`).join('')}
+  <button class="btn" data-go="wish" style="margin-top:10px">許一個揪心願</button><button class="btn ghost" data-go="wall">看看大家的心願</button></div>
+ ${p?`<div class="card"><b>綁定門市｜${esc(h.store)}</b><div class="muted">${J()?'年度健檢：安裝滿一年由門市排程':'年度健檢將於啟用關懷後安排'}</div><div class="row" style="margin-top:6px"><span>你的生活顧問｜${esc(H.plan&&H.plan.advisor?H.plan.advisor:(ADVS[h.store]||ADVS['Digital City 台中逢甲店']).nick)}</span><button class="tag" data-a="lineAdv">請顧問聯絡我</button></div></div>`:''}
+ </div>${nav('m1')}`},
+wish:()=>{const c=S.wcat||'';return `${hdr('許一個揪心願')}<div class="scroll" style="padding-top:12px"><div class="pad">
+ <div class="muted" style="margin-bottom:10px">為${S.home==='parents'?'長輩家':'我家'}許願。內容只有門市與總部看得到，不會公開。</div>
+ <div style="margin-bottom:10px">${['安全','方便','省電','家電保養','其他'].map(x=>`<button class="slot" style="margin:0 6px 8px 0" data-wcat="${x}" aria-pressed="${c===x}">${x}</button>`).join('')}</div>
+ <label class="muted">想要什麼？<textarea id="wishtxt" class="fld" rows="4" placeholder="例如：希望晚上起床時，走廊的燈能自己亮"></textarea></label>
+ <p class="muted">我們會認真評估每一個心願，但無法保證都能實現；有進度時會通知您。</p>
+ <button class="btn" data-a="wishSend">送出心願</button></div></div>`}
+};
+
+const CAT=[
+ {ring:0,id:'mgr',n:'家電檔案',d:'家庭設備檔案、保固與換季保養提醒',p:0,lock:1},
+ {ring:1,id:'clean',n:'冷氣清洗',d:'臥室冷氣 1 台',p:1800},
+ {ring:1,id:'warr',n:'延長保固',d:'洗衣機，下月到期',p:990},
+ {ring:1,id:'filter',n:'濾網與耗材',d:'空氣清淨機濾網',p:600},
+ {ring:2,id:'night',n:'夜間動線照明',d:'感應夜燈 3、門窗感測 2、智慧插座 1',p:3600,g:1},
+ {ring:2,id:'morning',n:'晨起平安確認',d:'門窗感測 1、人體感測 1',p:2400,g:1},
+ {ring:2,id:'power',n:'用電異常提醒',d:'智慧插座 3、溫度感測 1',p:1500,g:1},
+ {ring:2,id:'alert',n:'異常時依序通知家人',d:'先問長輩，再通知子女、成年家人與就近聯絡人',p:0,g:1},
+ {ring:2,id:'cam',n:'緊急查看（擴展期加購）',d:'鏡頭附實體遮蔽蓋，平時不看影像；長輩沒回應時，家屬才能查看約 30 秒，須長輩事先書面同意',p:0,later:1},
+ {ring:3,id:'ac',n:'冷氣換機評估',d:'使用 8 年',p:0,later:1},
+ {ring:3,id:'reno',n:'長輩友善居家改造',d:'照明、扶手與動線調整',p:0,later:1}
+];
+const RING=[['家電檔案｜免費','#D4003C'],['家電保養｜單次或年繳','#B80C40'],['長輩關懷｜設定費＋月付','#E0A030'],['家電換新｜擴展期','#888780']];
+function RSNF(){const c=S.case||{},an=(c.assessment&&c.assessment.answers)||{},dv=c.devices||[],ac=dv.find(d=>String(d.name).includes('冷氣')),wr=dv.find(d=>String(d.status).includes('保固'));
+ return {night:(an.night&&an.night!=='不會'?'夜間起床如廁':'夜間動線')+(an.light&&an.light!=='夠亮'?'、走廊偏暗':''),morning:'獨居且有固定晨間作息',power:'擔心忘記關火或用電（擴展期）',alert:'關懷設備需搭配通知',clean:ac?ac.name+'使用 '+ac.years+' 年，入夏前清洗':'',warr:wr?wr.name+wr.status:'',ac:ac&&ac.years>=8?ac.name+'使用 '+ac.years+' 年，之後再評估':''}}
+function fmt(n){return 'NT$ '+n.toLocaleString('en-US')}
+function A(){return S.adv}
+function advInit(){const c2=((S.case&&S.case.contacts)||[]).find(x=>String(x.r).includes('第二'));S.adv={t0:null,goals:['安心','安全'],budget:'可接受月付',sel:{},later:{},plan:'basic',pay:'m',rep:false,c2n:c2?c2.n:'',c2p:(c2&&c2.p)||'',cons:[0,0,0],escort:false,t1:null};}
+function recommend(){const a=A(),sel={mgr:1},later={};const g=a.goals,c=S.case||{},dv=c.devices||[];const rid=c.assessment&&c.assessment.rec?c.assessment.rec.id:'night';
+ if(g.includes('安心')||g.includes('安全')){sel[rid==='morning'?'morning':'night']=1;sel.alert=1}
+ const ac=dv.find(d=>String(d.name).includes('冷氣'));if(ac&&(ac.warn||ac.years>=5)){sel.clean=1;if(ac.years>=8)later.ac=1}
+ if(g.includes('省事')&&ac)sel.clean=1;
+ if(g.includes('省錢')&&dv.some(d=>String(d.status).includes('保固')))sel.warr=1;
+ if(a.budget==='先免費試用'){['night','alert','power','morning'].forEach(k=>delete sel[k]);}
+ a.sel=sel;a.later=later;}
+function hasGuard(){const a=A();return CAT.some(c=>c.g&&a.sel[c.id])}
+function totals(){const a=A();let one=0;CAT.forEach(c=>{if(a.sel[c.id])one+=c.p});const setup=hasGuard()?1500:0;const m=hasGuard()?({basic:299,two:449,adv:599}[a.plan]||299):0;return {one:one+setup,setup,m,y:m*10}}
+function planName(p){return {basic:'揪夜安｜單一場域關懷',two:'揪夜安＋揪食光｜兩場域關懷',adv:'揪全家｜全屋套餐'}[p||'basic']}
+function clock(){const a=A();if(!a||!a.t0)return '00:00';const t=Math.floor(((a.t1||Date.now())-a.t0)/1000);return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
+function stf(t,b=true){return `<div class="stf">${b?'<button class="back" data-a="back" aria-label="返回">‹</button>':''}<h1>${t}</h1></div>`}
+function sumbar(label,act,dis,hint){const t=totals();return `<div class="hintbar" id="hintbar" style="display:${dis&&hint?'block':'none'}">${hint||''}</div><div class="sum"><div style="font-size:.9em"><div>一次性 ${fmt(t.one)}</div><div class="muted">${t.m?'＋每月 '+fmt(t.m):'無月費'}</div></div><button class="btn" data-a="${act}" ${dis?'disabled':''}>${label}</button></div>`}
+Object.assign(V,{
+a1:()=>{const L=S.cases;return `${stf('揪居家｜門市端',false)}<div class="scroll">
+ <div class="step">${esc(S.me.store||'全部門市')}｜生活顧問 ${esc(S.me.name)}</div>
+ <button class="card" data-go="acard" style="display:flex;justify-content:space-between;align-items:center;width:calc(100% - 24px);margin-top:8px"><span><b>我的角色卡</b><span class="muted" style="display:block;font-size:.88em">主打技、認證與團隊服務品質</span></span><span class="chev">›</span></button>
+ <button class="card" data-go="d3" style="display:flex;justify-content:space-between;align-items:center;width:calc(100% - 24px);margin-top:8px;border-left:4px solid var(--brand)"><span><b>門市待辦</b><span class="muted" style="display:block;font-size:.88em">事後關心、設備問題與家庭需求</span></span><span class="chev">›</span></button>
+ <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span>近期預約</span><button class="tag" data-a="reload">重新整理</button></div>
+ ${L?(L.length?L.map(caseCard).join(''):'<div class="card muted">目前沒有待諮詢的預約。家屬在 App 預約後會出現在這裡。</div>'):'<div class="card muted">載入中…</div>'}
+ <div class="pad"><button class="btn ghost" data-a="ntStart">關懷通知流程演練（向家屬說明用）</button><button class="btn ghost" data-go="pw">變更密碼</button><button class="btn ghost" data-a="logout">登出</button></div></div>`},
+a2:()=>{const a=A(),c=S.case||{},as=c.assessment,an=as?as.answers:{},m=as?as.measures:{},Lr=as?as.lights.filter(x=>x[1]==='r'||x[1]==='y'):[];return `${stf('了解需求')}<div class="scroll">
+ <div class="step">步驟 1／4｜${esc(c.household||'')}｜${esc(c.label||'')} ${a.escort?'<span class="tag" style="background:#FAEEDA;color:#633806">陪同模式</span>':''}</div>
+ <div class="ly"><h3>這次最想解決什麼？（可複選）</h3>${['安心','安全','省事','省錢'].map(g=>`<button class="chip" data-goal="${g}" aria-pressed="${a.goals.includes(g)}">${g}</button>`).join('')}</div>
+ <div class="ly"><h3>家庭條件｜全國電子 AI 顧問阿國診斷與 AR 場勘</h3>
+ <div class="row"><span>長輩</span><span style="text-align:right">${esc(c.elder_note||'—')}</span></div>
+ ${as?`<div class="row"><span>居住狀況</span><span>${esc(an.live)}</span></div>
+ <div class="row"><span>夜間如廁</span><span>${esc(an.night)}</span></div>
+ <div class="row"><span>走廊照明</span><span>${esc(an.light)}</span></div>
+ <div class="row"><span>手機使用</span><span>${esc(an.phone)}</span></div>
+ <div class="row"><span>家屬最擔心</span><span style="text-align:right">${esc(an.worry)}</span></div>
+ ${measRows(m)}
+ ${Lr.length?`<div class="rs" style="margin-top:6px">居家安全檢核：${esc(Lr.map(x=>x[0]+(x[1]==='r'?'紅燈':'黃燈')+'（'+x[2]+'）').join('、'))}</div>`:''}
+ <div class="rs" style="margin-top:4px">全國電子 AI 顧問阿國推薦：${esc(as.rec.n)}</div>`:'<div class="rs">家屬尚未完成線上診斷，請於現場陪同填寫與量測。</div>'}
+ ${c.devices&&c.devices.length?`<div class="rs" style="margin-top:8px">由購買紀錄自動帶入</div>${c.devices.map(d=>`<div class="row"><span>${esc(d.name)}</span><span class="tag ${d.warn?'':'ok'}">${esc(d.years?'使用 '+d.years+' 年｜':'')}${esc(d.status)}</span></div>`).join('')}`:''}</div>
+ <div class="ly"><h3>長輩心願（顧問代記，選填）</h3><input class="fld" id="ewish" value="${esc(a.ewish||'')}" placeholder="例如：晚上起來看不到開關在哪裡"><div class="rs" style="margin-top:4px">送總部彙整為新的情境模板或服務</div></div>
+ <div class="ly"><h3>預算與承諾程度</h3>${['先免費試用','單次服務','可接受月付'].map(b=>`<button class="chip" data-budget="${b}" aria-pressed="${a.budget===b}">${b}</button>`).join('')}</div>
+ <div class="ly"><h3>到店的人</h3><button class="chip" data-a="escortT" aria-pressed="${!!a.escort}">長輩本人到店（陪同模式）</button><div class="rs">長輩不用手機時，由顧問代為說明與填寫</div></div>
+ <div class="pad"><button class="btn" data-a="advRec" ${a.goals.length?'':'disabled'}>產生建議方案</button></div></div>`},
+a3:()=>{const a=A(),RS=RSNF();return `${stf('調整方案')}<div class="scroll">
+ <div class="step">步驟 2／4｜目標：${a.goals.join('、')}｜${a.budget}</div>
+ <div class="ly" style="border:1.5px dashed #2B5C9E">
+  <button data-a="aiToggle" style="display:flex;justify-content:space-between;width:100%;align-items:center"><h3 style="margin:0;color:#2B5C9E">AI 建議與說明話術</h3><span class="tag" style="background:#E6EEF8;color:#2B5C9E">擴展期導入（示意）</span></button>
+  ${S.aiOpen?`<div class="rs" style="margin:6px 0 8px">依診斷結果與家庭條件產生（不含姓名、地址等個資）；知識來源為總部情境模板。</div>
+   <div class="row"><span><b>建議組合</b><span class="muted" style="display:block;font-size:.88em">夜間動線照明＋冷氣清洗；冷氣 8 年，換機列為之後評估</span></span></div>
+   <div class="row"><span><b>推薦理由</b><span class="muted" style="display:block;font-size:.88em">長輩夜間起床如廁、走廊偏暗；感應夜燈與門窗感測可在不拍畫面的情況下照顧夜間動線</span></span></div>
+   <div class="row"><span><b>對長輩的說明話術</b><span class="muted" style="display:block;font-size:.88em">「這個燈只會在您晚上起床時自己亮，不會拍任何畫面。沒事的話，您按一下『我很好』就好。」</span></span></div>
+   <div class="row"><span><b>提醒</b><span class="muted" style="display:block;font-size:.88em">長輩家若沒有 Wi-Fi，需先處理網路；相容性請以下方規則檢查為準</span></span></div>
+   <div style="display:flex;gap:6px;margin-top:8px"><button class="tag ok" data-a="aiUse" style="border:0">採用</button><button class="tag" data-a="aiEdit" style="border:0">修改後採用</button><button class="tag" data-a="aiSkip" style="border:0;background:var(--line);color:var(--muted)">不採用</button></div>
+   <div class="rs" style="margin-top:6px">AI 只提供建議，最終方案由生活顧問確認；AI 不參與異常通知與緊急判斷。</div>`:'<div class="rs" style="margin-top:4px">點開查看 AI 建議的組合、理由與說明話術</div>'}
+ </div>
+ ${RING.map(([t,c],ri)=>`<div class="ly"><h3><span class="dot" style="background:${c}"></span>${t}</h3>
+  ${CAT.filter(x=>x.ring===ri).map(x=>{const on=a.sel[x.id],lt=a.later[x.id];return `<button class="it" data-item="${x.id}" ${x.exp?'aria-disabled="true" style="opacity:.55"':''}><span class="ck ${on?'on':''} ${x.later&&lt?'later':''}">${on?'✓':(x.later&&lt?'…':'')}</span><span style="flex:1"><b style="font-weight:500">${x.n}</b>${x.exp?'<span class="rtag" style="background:var(--bg);color:var(--muted)">擴展期開放</span>':''}${RS[x.id]&&(on||lt)?'<span class="rtag">推薦</span>':''}<div class="rs">${x.later?(lt?'之後再評估｜':'')+x.d:x.d}${x.p&&!x.exp?'｜'+fmt(x.p):''}${x.lock?'｜所有方案的基礎':''}</div>${RS[x.id]&&(on||lt)?`<div class="rs">理由：${RS[x.id]}</div>`:''}</span></button>`}).join('')}
+  ${ri===2&&a.sel.night?(a.rep?'<div class="okbox">已替換為同平台智慧插座，相容性確認完成。</div>':'<div class="warn">相容性提示：動線組合中的智慧插座與閘道器不同平台。<br><button data-a="advRep" style="text-decoration:underline;margin-top:4px">一鍵替換為同平台型號</button></div>'):''}
+ </div>`).join('')}
+ <p class="muted pad">點選項目可加入或移除；家電換新項目點選後標為「之後再評估」。發現規則有誤？<button style="text-decoration:underline" data-a="advReport">回報給總部</button></p>
+ </div>${sumbar('下一步：報價','advQuote',a.sel.night&&!a.rep,'請先處理相容性提示')}`},
+a4:()=>{const a=A(),t=totals();return `${stf('報價與方案')}<div class="scroll">
+ <div class="step">步驟 3／4｜${EN()}家</div>
+ <div class="ly"><h3>一次性費用</h3>${CAT.filter(c=>a.sel[c.id]&&c.p).map(c=>`<div class="row"><span>${c.n}</span><span>${fmt(c.p)}</span></div>`).join('')}${t.setup?`<div class="row"><span>規劃與安裝設定費</span><span>${fmt(t.setup)}</span></div>`:''}<div class="row"><b>合計</b><b>${fmt(t.one)}</b></div><div class="rs">試點定價，實際依門市盤點</div><div class="rs" style="margin-top:4px">安裝時段由顧問統一安排，可能分次到府。</div></div>
+ <div class="ly"><h3>無障礙改善（選配，同一張報價）</h3><div class="row"><span>浴室扶手、移除門檻</span><span class="rs">揪夥伴施工業者到府報價</span></div><div class="rs">${EN()}符合長照補助資格時，轉介 1966 申請，補助後差額再併入本報價。</div></div>
+ ${hasGuard()?`<div class="ly"><h3>關懷方案</h3>
+  <button class="plan" data-plan="basic" aria-pressed="${a.plan==='basic'}"><b>揪夜安｜單一場域　每月 NT$ 299</b><div class="rs">臥室到浴室：異常通知、設備離線偵測、每月摘要</div></button>
+  <button class="plan" data-plan="two" disabled style="opacity:.55"><b>加購揪食光｜每月 NT$ 449</b> <span class="rtag">擴展期</span><div class="rs">再加廚房：防乾燒與用電異常提醒（每加一場域 +150）</div></button>
+  <button class="plan" data-plan="adv" disabled style="opacity:.55"><b>揪全家｜全屋套餐　每月 NT$ 599</b> <span class="rtag">擴展期</span><div class="rs">全部場域關懷，含年度健檢、首年設定費減免</div></button>
+  <div class="seg" role="group" aria-label="付款方式"><button data-pay="m" aria-pressed="${a.pay==='m'}">月付不綁約</button><button data-pay="y" aria-pressed="${a.pay==='y'}">年繳 ${fmt(t.y)}（10 付 12）</button></div>
+  <p class="rs" style="margin:6px 0 0">付款人可以是子女或長輩本人，也可由兄弟姊妹分攤月費；不論誰付款，都須長輩本人同意才成交。家電換新與以租代買於擴展期開放</p></div>
+ <div class="ly"><h3>第二聯絡人（必填）</h3><label class="rs">姓名<input class="fld" id="c2n" value="${a.c2n}" placeholder="例如：${CN('第二聯絡人','第二聯絡人')}"></label><label class="rs" style="display:block;margin-top:8px">電話<input class="fld" id="c2p" inputmode="tel" value="${a.c2p}" placeholder="0912-345-678"></label><div class="rs" style="margin-top:6px">依序通知：長輩本人 → 主要聯絡人 → 第二聯絡人 → 就近聯絡人。</div></div>`:'<div class="ly"><h3>關懷方案</h3><div class="rs">本次未選長輩關懷項目，無月費。</div></div>'}
+ </div>${sumbar('下一步：確認','advConfirm',hasGuard()&&!a.c2n.trim(),'請填寫第二聯絡人姓名')}`},
+a5:()=>{const a=A(),L=[a.sel.cam?'已向長輩說明門口攝影機平常遮蓋、異常時才開放家人查看，並取得本人同意':'已向長輩說明設備會記錄活動、不拍攝影像，並取得本人同意','已說明本服務為生活關懷，非醫療照護；緊急請撥 119','付款人（子女或長輩本人）同意服務條款與資料使用說明'];return `${stf('確認方案')}<div class="scroll">
+ <div class="step">步驟 4／4｜同意事項皆須勾選</div>
+ <div class="ly">${L.map((l,i)=>`<button class="it" data-cons="${i}"><span class="ck ${a.cons[i]?'on':''}">${a.cons[i]?'✓':''}</span><span style="flex:1">${l}</span></button>`).join('')}</div>
+ <div class="ly"><h3>方案內容</h3>${CAT.filter(c=>a.sel[c.id]).map(c=>`<div class="rs">・${c.n}</div>`).join('')}${CAT.filter(c=>a.later[c.id]).map(c=>`<div class="rs">・${c.n}（之後再評估）</div>`).join('')}</div>
+ </div>${sumbar('確認並傳送方案','advDone',a.cons.some(x=>!x),'請勾選全部同意事項')}`},
+a6:()=>{const a=A(),t=totals();const lit=[1,CAT.some(c=>c.ring===1&&a.sel[c.id]),hasGuard(),CAT.some(c=>c.ring===3&&a.later[c.id])];
+ const ring=`<svg viewBox="0 0 120 120" width="120" height="120" role="img"><title>專屬同心圓</title>${[56,42,28,14].map((r,i)=>{const ri=3-i;const on=lit[ri];return `<circle cx="60" cy="60" r="${r}" fill="${on?RING[ri][1]:'none'}" fill-opacity="${on?(ri===3?.12:.25):0}" stroke="${RING[ri][1]}" stroke-width="1.2" ${ri===3&&on?'stroke-dasharray="3 3"':''}/>`}).join('')}</svg>`;
+ return `${stf('方案已傳送',false)}<div class="scroll">
+ <div style="height:12px"></div>
+ <div class="card"><b>${EN()}家｜專屬居家方案</b><div style="display:flex;gap:12px;align-items:center;margin-top:8px">${ring}<div class="rs" style="line-height:1.8">${CAT.filter(c=>a.sel[c.id]).map(c=>`<div><span class="dot" style="background:${RING[c.ring][1]}"></span> ${c.n}</div>`).join('')}${CAT.filter(c=>a.later[c.id]).map(c=>`<div>○ ${c.n}（之後）</div>`).join('')}</div></div>
+ <div class="row" style="margin-top:8px"><span>一次性費用</span><b>${fmt(t.one)}</b></div>${t.m?`<div class="row"><span>${planName(a.plan)}</span><b>${a.pay==='y'?fmt(t.y)+'／年':fmt(t.m)+'／月，不綁約'}</b></div>`:''}</div>
+ <div class="pad"><div class="okbox" style="margin-top:0">方案已傳送到${ON()}的 App；家屬確認後會建立到府安裝工單，由門市統一排程，能合併則合併到府。</div>${a.ewish?`<div class="okbox">長輩心願「${esc(a.ewish)}」已送總部彙整。</div>`:''}<button class="btn" data-a="advAgain" style="margin-top:12px">回到近期預約</button><button class="btn ghost" data-a="advPrint" style="margin-top:8px">列印方案摘要</button></div></div>`}
+});
+setInterval(()=>{const e=document.getElementById('clk');if(e&&A()&&A().t0&&!A().t1)e.textContent=clock()},1000);
+
+const SCF=()=>({
+ night:{t:'夜間浴室停留過久',time:'02:44',start:'02:14',type:'act',first:''+EN()+' 02:14 進入浴室',title:'浴室停留時間較長',body:''+EN()+' 02:14 進入浴室，已超過 30 分鐘未離開。'},
+ morning:{t:'早上沒有任何活動',time:'10:00',start:'09:00',type:'act',first:'平常 09:00 前會起床',title:'早上尚未偵測到活動',body:'今天到 10:00 仍未偵測到'+EN()+'起床或使用電熱水壺。'},
+ offline:{t:'浴室門感測器離線',time:'21:10',start:'20:40',type:'dev',first:'感測器最後一次回傳',title:'浴室門感測器 30 分鐘沒有回應',body:'可能是電池或網路問題，不代表長輩發生狀況。'}
+});
+function N(){return S.nt}
+function ntInit(k){const c=SCF()[k];S.nt={k,c,log:[[c.start,c.first]],done:null,alert:false};}
+function lhead(t){return `<div class="lh"><button class="back" data-a="back" aria-label="返回">‹</button><b style="flex:1">${t}</b></div>`}
+function addMin(h,m){let [a,b]=h.split(':').map(Number);b+=m;a+=Math.floor(b/60);b%=60;return String(a%24).padStart(2,'0')+':'+String(b).padStart(2,'0')}
+function nlog(m,t){const n=N();n.log.push(m>=1440?['隔天',t.replace('隔天：','')]:[addMin(n.c.time,m),t])}
+Object.assign(V,{
+n0:()=>`${hdr('關懷通知演練')}<div class="scroll" style="padding-top:12px"><div class="pad">
+ <div class="sim" style="margin:0 0 12px"><b>演練模式</b><span class="muted">：模擬設備偵測到異常時的流程，不會真的通知任何人。</span></div>
+ <p class="muted" style="margin:0 4px 12px">異常時依序進行：先問長輩 → 叫醒家人 → 就近到場 → 家人判斷是否求救。門市負責事前設定與事後關心，不參與緊急處理。</p>
+ ${Object.entries(SCF()).map(([k,c])=>`<button class="role" data-sc="${k}"><div style="font-weight:700">${c.t}</div><div class="muted">${c.time}｜${c.type==='dev'?'設備異常，由門市安排處理':'活動異常，先問長輩本人'}</div></button>`).join('')}
+ </div></div>`,
+e1:()=>{const n=N(),c=n.c;return `${hdr('長輩家中：先問長輩本人',{aplus:false})}<div class="scroll" style="padding-top:16px"><div class="pad">
+ <div class="card" style="text-align:center;padding:26px 16px"><div class="muted">${c.time}｜浴室門口夜燈閃爍、小音箱語音詢問</div>
+ <div style="font-size:1.6em;font-weight:700;margin:14px 0 6px">${EN()}，需要幫忙嗎？</div><div class="muted" style="font-size:1.05em">沒事的話，請按一下按鈕</div>
+ <button class="btn" data-a="ntFine" style="margin-top:18px;font-size:1.3em;padding:18px">我很好</button></div>
+ <div class="card"><div class="muted">${c.body}</div></div>
+ <div class="sim"><b>演練：</b><span class="muted">模擬${EN()} 5 分鐘沒有回應，系統再撥打家中電話</span><button class="btn ghost" data-a="ntNoResp" style="margin-top:8px">模擬未回應，看下一步</button></div>
+ </div></div>`},
+c1:()=>{const n=N(),c=n.c,act=c.type==='act';return `${lhead('全國電子揪居家（官方帳號）')}<div class="chat">
+ <div class="sysnote">${ON()}的 LINE${act?'｜同時收到語音來電':''}</div>
+ ${act?'<div class="bub" style="margin-bottom:10px"><div class="hd" style="padding:10px 12px"><b>📞 揪居家來電中</b><div class="rs">「'+EN()+'可能需要協助，請查看 LINE 訊息」</div></div></div>':''}
+ <div class="bub"><div class="hd" style="${act?'background:var(--brand-soft)':''}"><div class="rs" style="color:${act?'var(--brand-ink)':'var(--muted)'}">${act?'活動提醒':'設備提醒'}｜${EN()}家</div><b style="font-size:1.05em">${c.title}</b><div style="margin-top:4px;font-size:.93em">${c.body}</div>${act?'<div class="rs" style="margin-top:6px">'+EN()+'未回應燈光詢問，家中電話無人接聽。</div>':''}</div>
+ <div style="padding:0 12px 12px">
+ ${act?`<button class="btn" data-a="ntCall">撥打給${EN()}</button><button class="btn ghost" data-a="ntNear">請就近聯絡人${CN('就近','就近聯絡人')}前往</button><button class="btn ghost" data-a="ntOk" data-by="${ON()}">我已確認，一切平安</button><div class="rs" style="margin-top:8px;color:var(--brand-ink)">確認可能有危險時，請撥打 119。</div>`
+ :`<div class="rs" style="margin-bottom:8px">綁定門市將聯繫您，安排更換電池或檢查網路。</div><button class="btn ghost" data-a="ntView">查看關懷總覽</button>`}
+ </div></div><div class="ts">${act?addMin(c.time,8):c.time}</div>
+ ${act?`<div class="sim"><b>演練：</b><span class="muted">模擬${ON()} 5 分鐘沒有回應</span><button class="btn ghost" data-a="ntEsc" style="margin-top:8px">模擬未回應，看下一步</button></div>`:''}
+ </div>`},
+c2:()=>{const n=N(),c=n.c;return `${lhead('全國電子揪居家（官方帳號）')}<div class="chat">
+ <div class="sysnote">就近聯絡人${CN('就近','就近聯絡人')}（鄰居）的 LINE｜同時收到語音來電</div>
+ <div class="bub"><div class="hd" style="background:var(--brand-soft)"><div class="rs" style="color:var(--brand-ink)">請協助查看｜您是${EN()}的就近聯絡人</div><b style="font-size:1.05em">${EN()}可能需要協助</b><div style="margin-top:4px;font-size:.93em">${c.body} ${EN()}與家人目前都未回應。</div><div class="rs" style="margin-top:6px">您持有備用鑰匙｜${CN('第二聯絡人','第二聯絡人')}也已收到通知</div></div>
+ <div style="padding:0 12px 12px"><button class="btn" data-a="ntGo">我現在過去看看</button><button class="btn ghost" data-a="ntOk" data-near="1" data-by="${CN('就近','就近聯絡人')}（就近聯絡人）">已到場，一切平安</button>
+ <div style="display:flex;gap:8px;margin-top:8px"><button class="btn ghost" style="margin:0" data-a="ntCenter">撥打 119</button><button class="btn ghost" style="margin:0;color:var(--brand)" data-a="ntCall119">需要協助：撥打 119</button></div></div></div>
+ <div class="ts">${addMin(c.time,13)}</div></div>`},
+c3:()=>{const n=N(),c=n.c,dev=c.type==='dev',em=n.done&&n.done.includes('119');return `${hdr(''+EN()+'的家')}<div class="scroll" style="padding-top:12px">
+ <div class="card" style="border:2px solid ${n.done&&!em||dev?'var(--ok)':'var(--brand)'}"><div class="rs">今日狀態</div><b style="font-size:1.2em">${dev?'平安｜1 台設備待處理':(em?'已通報 119':(n.done?'已確認平安':'需要確認'))}</b><div class="rs">${n.done?'處理者：'+n.done:(dev?'門市將協助更換電池或檢查網路':'尚未有人確認')}</div></div>
+ <div class="sec">這次發生的事</div><div class="card"><div class="tl">${n.log.map(([t,d])=>`<div><b style="font-weight:500">${t}</b>　${d}</div>`).join('')}</div></div>
+ <div class="sec">設備狀態</div><div class="card" style="padding:4px 14px">
+ <div class="row"><span>門窗感測器｜浴室門</span>${dev?'<span class="tag">離線</span>':'<span class="tag ok">正常</span>'}</div>
+ <div class="row"><span>門窗感測器｜臥室門</span><span class="tag ok">正常</span></div><div class="row"><span>浴室緊急按鈕</span><span class="tag ok">正常</span></div><div class="row"><span>智慧插座｜電熱水壺</span><span class="tag ok">正常</span></div></div>
+ <div class="card"><b>綁定門市｜${STORE()}</b><div class="rs">負責事前設定與事後關心，不參與緊急處理</div></div>
+ <div class="pad"><button class="btn ghost" data-a="ntAgain">換一個情境</button><p class="muted" style="text-align:center">本頁不顯示任何影像；摘要不構成醫療判斷。</p></div></div>`}
+});
+
+Object.assign(V,{
+fam:()=>{const H=S.hh,h=H.household,f=S.fam||(S.fam={grand:true});return `${hdr('家庭成員')}<div class="scroll" style="padding-top:12px">
+ <div class="card" style="padding:4px 14px">
+  <div class="row"><div><b>${EN()}</b><div class="muted">長輩｜決定誰能看到作息</div></div><span class="tag ok">長輩</span></div>
+  ${H.members.map(x=>`<div class="row"><div><b>${esc(x.name)}</b><div class="muted">${x.relation==='管理者'?'管理者｜異常通知、方案管理':'家人｜可查看關懷狀態與摘要'}</div></div><span class="tag">${esc(x.relation)}</span></div>`).join('')}
+  ${(h.contacts||[]).map(c=>`<div class="row"><div><b>${esc(c.n)}</b><div class="muted">${esc(c.r)}｜${esc(c.d||'')}</div></div><span class="tag">${esc(String(c.r).split('（')[0])}</span></div>`).join('')}</div>
+ <div class="sec">${EN()}的同意設定</div>
+ <div class="card" style="padding:4px 14px">
+  <div class="row"><span>子女可查看關懷狀態與摘要</span><span class="tag ${S.ph>=3?'ok':''}">${S.ph>=3?'已同意':'待門市確認'}</span></div>
+  <button class="row" data-a="famGrand" style="width:100%"><span>孫輩可查看簡化版每月摘要</span><span class="tag ${f.grand?'ok':''}">${f.grand?'已同意':'未同意'}</span></button></div>
+ <div class="card" style="background:var(--note)">異常通知只送給主要聯絡人與第二聯絡人；其他家人只看每月摘要，避免全家同時被驚擾。家庭方案不依人數加價。</div>
+ <div class="pad"><button class="btn ghost" data-a="invite">邀請家人加入</button>${S.invite?`<div class="okbox">邀請碼 <b style="letter-spacing:2px">${esc(S.invite)}</b>：家人註冊時輸入就能加入，7 天內有效。</div>`:''}</div></div>`},
+msum:()=>{const r=S.sumRole||'child',g=S.fam?S.fam.grand:true,H=S.hh,E=(H&&H.care)||[],dv=(H?H.devices:[]).filter(d=>d.warn),mth=new Date().getMonth()+1;const act=E.filter(e=>e.kind==='act'),dev=E.filter(e=>e.kind==='dev'),wake=E.filter(e=>e.outcome==='通知家人');
+ return `${hdr(mth+' 月揪居家摘要')}<div class="scroll" style="padding-top:12px">
+ <div class="tabs" role="tablist"><button role="tab" aria-selected="${r==='child'}" data-role="child">子女看到的</button><button role="tab" aria-selected="${r==='grand'}" data-role="grand">孫輩看到的</button></div>
+ ${r==='child'?`<div class="card"><div class="muted">長輩家｜長輩關懷</div><div class="big" style="font-size:1.3em">${wake.length?'有 '+wake.length+' 次通知家人':'近期平安'}</div><div class="row"><span>活動提醒</span><span>${act.length} 次${act.length?'，'+esc(act[0].outcome):''}</span></div><div class="row"><span>設備提醒</span><span>${dev.length} 次</span></div></div>
+ <div class="card"><b>家電與保養提醒</b>${dv.length?dv.map(d=>`<div class="row"><span>${d.home==='parents'?'長輩家':'我家'}｜${esc(d.name)}</span><span class="tag">${esc(d.status)}</span></div>`).join(''):'<div class="muted" style="margin-top:4px">目前沒有需要處理的家電</div>'}</div>`
+ :(g?`<div class="card"><div class="big" style="font-size:1.3em">${EN()}${wake.length?'這個月有家人協助確認過':'這個月一切平安'}</div><div class="muted">年度健檢由綁定門市排程。</div></div>
+ <div class="card" style="background:var(--note)"><b>可以一起做的事</b><div class="muted">回家時陪長輩試試感應小夜燈，也可以教長輩用報平安按鈕。</div></div>`
+ :`<div class="card"><b>尚未開放</b><div class="muted">${EN()}尚未同意孫輩查看摘要，可以在「家庭成員」中由長輩決定。</div></div>`)}
+ <p class="muted pad">摘要依設備使用紀錄整理，不構成醫療判斷。</p></div>`}
+});
+const TIP={login:'輸入 Email 與密碼登入；第一次使用請建立家庭帳號。',home:'點全國電子 AI 顧問阿國的「幫長輩家做居家診斷」或「揪居家」卡片，從居家安全開始。',b1:'選擇由誰填寫；長輩本人會自動切換大字模式。',ar:'先量走道寬度、浴室門檻與距離，再到下一步回答全國電子 AI 顧問阿國的問題。',b2:'選一個答案後按「下一題」。',b3:'看看紅黃綠燈、推薦理由與量測結果，再預約門市。',b4:'選門市與時段，也能先認識你的生活顧問。',b5:'到「我的家」看看預約後的變化。',m1:'「我的家」集中管理兩個家的家電與關懷。',m2:'上方「待處理」集中顯示需要行動的事；往下可看關懷設定、家庭成員與揪心願。',hc:'看看家電的能效與省電估算：先保養，仍不理想再評估換機。',nset:'異常通知為必要，其他通知可依需要開關。',plan:'月付不綁約，可隨時變更或取消。',wish:'選類別、寫下心願後送出。',wall:'訂閱同場域方案的家庭可按「我也需要」；達門檻後總部評估，再訂出成團戶數開放預購。',pre:'預購達成團戶數才下單，未達全額退款。',obs:'先取得家人與長輩同意，再分步驟觀察。',obsR:'檢核結果可帶去門市，也能送出為揪心願。',pl:'確認方案前請填寫到府地址與聯絡電話。',ip:'技師開始安裝後，這裡會即時更新進度。',gl:'關懷事件由設備自動回報，依序先問長輩、再找家人。',a1:'點選一筆預約開始諮詢，或查看門市待辦。',d3:'門市負責事後關心、設備問題與家庭需求，不參與緊急處理。',a2:'勾選目標與預算，也可記錄長輩心願。',a3:'推薦項目已預先勾選；可點開 AI 建議與說明話術（擴展期導入）。',a4:'選擇付款方式，並填寫第二聯絡人。',a5:'三項同意都勾選後才能傳送方案。',a6:'方案已同步到家屬的 App。',acard:'延續門市人物圖鑑：主打技、認證與團隊服務品質。',t1:'技師只看到工單所需資訊；完整地址在出發當天顯示。',t2:'帶入 AR 場勘量測，按「開始安裝」進入步驟。',t3:'依序完成安裝、掃描序號、長輩測試與教學；與預演不同可回報差異。',t4:'完工後自動通知家屬與生活顧問。',n0:'選一個情境，演練先問長輩、再找家人的流程。',e1:'長輩按下「我很好」即結束，不會驚動家人。',c1:'子女同時收到 LINE 與語音電話，可請就近聯絡人前往。',c2:'就近聯絡人到場查看，由家人判斷是否撥打 119。',c3:'時間軸記錄了這次發生的每一步。'};
+Object.assign(V,{
+nset:()=>{const n=S.ns||(S.ns={daily:false,monthly:true,kid:true});const row=(k,t,d,lock)=>`<button class="row" ${lock?'':`data-ns="${k}"`} style="width:100%"><span>${t}<span class="muted" style="display:block;font-size:.85em">${d}</span></span><span class="tag ${lock||n[k]?'ok':''}">${lock?'必要':(n[k]?'開啟':'關閉')}</span></button>`;
+ return `${hdr('通知設定')}<div class="scroll" style="padding-top:12px">
+ <div class="card" style="padding:4px 14px">${row('alert','異常通知','活動或設備異常時立即通知',1)}${row('daily','每日平安訊息','每天早上 9 點告知昨晚與今早狀況')}${row('monthly','每月整合摘要','關懷狀況與兩個家的家電提醒')}${row('kid','孫輩簡化摘要',''+CN('孫','孫輩')+'只收到簡化版每月摘要')}</div>
+ <div class="sec">判斷規則</div><div class="card" style="padding:4px 14px"><div class="row"><span>浴室停留超過</span><b>30 分鐘</b></div><div class="row"><span>早上無活動超過</span><b>10:00</b></div><div class="row"><span>長輩未回應多久後通知家人</span><b>5 分鐘</b></div><div class="row"><span>家人未回應多久後通知下一位</span><b>5 分鐘</b></div><div class="muted" style="padding:8px 0">調整規則前，建議先與長輩討論；門市顧問也可以協助設定。</div></div>
+ <div class="sec">通知順序</div><div class="card"><div class="muted">1. ${EN()}本人（燈光與語音詢問、家中電話）→ 2. ${ON()}（LINE＋語音電話）→ 3. ${CN('第二聯絡人','第二聯絡人')} → 4. ${CN('就近','就近聯絡人')}（就近聯絡人）。由家人判斷是否撥打 119；門市不參與緊急處理。未成年成員不接收異常通知。</div></div></div>`},
+plan:()=>{const H=S.hh,p=H&&H.plan;return `${hdr('關懷方案')}<div class="scroll" style="padding-top:12px">
+ ${J()&&p?`<div class="card"><div class="muted">目前方案</div><b style="font-size:1.1em">${esc(planName(p.plan))}</b><div class="muted">每月 ${fmt(p.monthly)}｜不綁約，可由兄弟姊妹分攤</div></div>
+ <div class="card" style="padding:4px 14px"><button class="row" data-req="方案升級" style="width:100%"><span>加購揪食光，或升級揪全家<span class="muted" style="display:block;font-size:.85em">擴展期開放；先登記，開放時優先通知</span></span><span class="chev">›</span></button><button class="row" data-req="改為年繳" style="width:100%"><span>改為年繳（10 付 12）</span><span class="chev">›</span></button><button class="row" data-req="修改第二聯絡人" style="width:100%"><span>修改第二聯絡人<span class="muted" style="display:block;font-size:.85em">目前：${CN('第二聯絡人','尚未設定')}</span></span><span class="chev">›</span></button></div>
+ <div class="card"><b>取消關懷方案</b><div class="muted" style="margin:4px 0 10px">月付不綁約，當期結束後停止服務；設備歸您所有，家電檔案仍可免費使用。</div><button class="btn ghost" data-req="取消方案" style="margin:0">申請取消</button></div>`
+ :S.ph>=2&&p?`<div class="card"><b>方案${p.status==='待確認'?'待確認':'已確認'}</b><div class="muted" style="margin:4px 0 10px">${esc(planName(p.plan))}｜${p.monthly?'每月 '+fmt(p.monthly):'無月費'}；長輩關懷在到府安裝完成後啟用。</div><button class="btn" data-go="pl">查看專屬方案</button></div>`
+ :`<div class="card"><b>尚未啟用長輩關懷</b><div class="muted" style="margin:4px 0 10px">家電檔案已免費為您服務。需要關懷爸媽的日常時，可以先做 AR 場勘與居家診斷，或預約門市諮詢。</div><button class="btn" data-go="b1">開始居家安全評估</button></div>`}
+ <div class="card" style="padding:4px 14px"><button class="row" data-a="ntStart" style="width:100%"><span>異常時會怎麼通知？看演練</span><span class="chev">›</span></button></div></div>`}
+});
+
+Object.assign(V,{
+d3:()=>{const D=S.todos;return `${stf('門市待辦')}<div class="scroll">
+ <div class="step">${esc(S.me.store||'全部門市')}｜門市只負責事前設定與事後關心，不參與緊急處理</div>
+ ${!D?'<div class="card muted">載入中…</div>':`
+ <div class="ly"><h3><span class="dot" style="background:#2E7D4F"></span>事後關心（${D.care.length}）</h3>${D.care.length?D.care.map(e=>`<div class="it" style="align-items:center"><span style="flex:1"><b style="font-weight:500">${esc(e.household)}｜${esc(e.when)} ${esc(e.title)}</b><div class="rs">結果：${esc(e.outcome)}；致電關心，並確認判斷時間是否合適</div></span><button class="tag" data-care="${e.id}" style="border:0">完成關心</button></div>`).join(''):'<div class="rs">目前沒有需要事後關心的事件</div>'}</div>
+ <div class="ly"><h3><span class="dot" style="background:#E69A1E"></span>家庭需求與設備問題（${D.requests.length}）</h3>${D.requests.length?D.requests.map(r=>`<div class="it" style="align-items:center"><span style="flex:1"><b style="font-weight:500">${esc(r.household)}｜${esc(r.kind)}</b><div class="rs">${esc(r.note||'由家屬在 App 送出')}｜${esc(r.when)}</div></span><button class="tag" data-rqdone="${r.id}" style="border:0">標記已處理</button></div>`).join(''):'<div class="rs">目前沒有待處理需求</div>'}</div>`}
+ <p class="muted pad">家庭的作息資料只在必要時呈現摘要；長輩可隨時調整誰能查看。年度健檢與派工排程請在企業營運資訊平台安排。</p>
+ </div>`}
+});
+
+const WT=[
+ {id:'bath',n:'浴室防滑與扶手',d:'洗澡進出更安心',c:128,th:100,st:'pre'},
+ {id:'bedrail',n:'床邊起身扶手',d:'起身與上下床更省力',c:86,th:100,st:'res'},
+ {id:'remote',n:'大字遙控器',d:'冷氣、電視按鍵看得清楚',c:47,th:100,st:'res'},
+ {id:'video',n:'長輩視訊教學',d:'學會用手機和孫子視訊',c:31,th:100,st:'res'}];
+const PRE={name:'浴室扶手組',price:3490,early:2990,goal:60,now:41,items:['免鑽孔浴室扶手 ×2','防滑地墊與止滑貼','技師到府安裝與長輩教學'],ship:'預計 12 月中出貨，由綁定門市安排安裝'};
+Object.assign(V,{
+wall:()=>{const T=S.topics;if(!T)return `${hdr('大家的心願')}<div class="ld">載入中…</div>`;return `${hdr('大家的心願')}<div class="scroll" style="padding-top:12px">
+ <div class="pad muted" style="margin-bottom:4px">只顯示整理過的主題，不公開任何家庭的內容。只有訂閱同一場域方案的家庭可以按「我也需要」；共鳴達門檻（擴展期 100 戶，試點期依訂閱戶數調整）後由總部評估，再依供應商最低訂購量與售價訂出每項商品的成團戶數，開放預購。</div>
+ ${T.topics.map(t=>{const c=t.c,pct=Math.min(100,Math.round(c/t.th*100));return `<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><b>${esc(t.n)}</b><div class="muted" style="font-size:.9em">${esc(t.d)}</div></div>${t.st==='pre'?'<span class="tag ok">預購中</span>':`<span class="tag">共鳴中</span>`}</div>
+  <div class="pbar" style="margin:10px 0 4px"><i style="width:${pct}%"></i></div>
+  <div class="muted" style="font-size:.88em">${c} 個家庭也需要${t.st==='pre'?'｜已達評估門檻':`｜還差 ${Math.max(0,t.th-c)} 個家庭進入評估`}</div>
+  ${t.st==='pre'?`<button class="btn" data-go="pre" style="margin-top:10px">前往預購：${PRE.name}</button>`:(J()?`<button class="btn ghost" data-me="${t.id}" aria-pressed="${!!t.me}" style="margin-top:10px">${t.me?'已表示需要 ✓':'我也需要'}</button>`:`<button class="btn ghost" disabled style="margin-top:10px;opacity:.6">訂閱同場域方案後即可參與</button>`)}
+ </div>`}).join('')}
+ <p class="pad muted" style="font-size:.85em">心願來源：家人提出、門市代長輩記錄、技師健檢回報。</p></div>`},
+pre:()=>{const PO=(S.topics&&S.topics.preorder)||{count:0,me:false},done=!!PO.me,now=PRE.now+PO.count,pct=Math.round(now/PRE.goal*100);return `${hdr('預購｜'+PRE.name)}<div class="scroll" style="padding-top:12px">
+ <div class="card"><div class="rs">由揪居家家庭提案｜浴室防滑與扶手</div><div class="big" style="margin:6px 0">${PRE.name}</div>
+  ${PRE.items.map(x=>`<div class="row"><span>${x}</span></div>`).join('')}
+  <div style="display:flex;align-items:baseline;gap:10px;margin-top:10px"><b style="font-size:1.4em;color:var(--brand)">早鳥 NT$ ${PRE.early.toLocaleString()}</b><s class="muted">NT$ ${PRE.price.toLocaleString()}</s></div></div>
+ <div class="card"><b>成團進度</b><div class="rs">成團戶數由總部依供應商最低訂購量與售價訂定</div><div class="pbar" style="margin:8px 0 4px"><i style="width:${Math.min(pct,100)}%"></i></div><div class="muted">${now}／${PRE.goal} 組｜達到成團戶數才會正式下單與安裝</div></div>
+ <div class="card"><b>預購保障</b>
+  <div class="row"><span>未達成團數</span><span>全額退款</span></div>
+  <div class="row"><span>交付與保固</span><span>由全國電子負責</span></div>
+  <div class="row"><span>出貨與安裝</span><span style="text-align:right">${PRE.ship}</span></div>
+  <div class="row"><span>早鳥權益</span><span style="text-align:right">首批優惠、優先安裝、延長保固 1 年</span></div>
+  <div class="rs" style="margin-top:6px">提案家庭可獲得購物金與「由揪居家家庭提案」標示；本服務不提供任何家庭資料給供應商。</div></div>
+ <div class="pad">${done?'<div class="okbox">已登記預購意向。達到成團戶數、正式開放付款時會通知您，再由綁定門市安排安裝。</div>':'<button class="btn" data-a="preBuy">登記預購意向（暫不收款）</button>'}</div></div>`}
+});
+
+const ADVS={'Digital City 台中逢甲店':{nick:'小明顧問',ini:'明',color:'#D4003C',skills:['夜間動線照明規劃','長輩陪同說明','冷氣保養規劃'],stats:[['貼心 CARE',92],['安心 SAFE',88],['規劃 PLAN',85]]},
+ 'Digital City 台中公益店':{nick:'阿芳顧問',ini:'芳',color:'#2B5C9E',skills:['家電換機評估','冷氣保養規劃'],stats:[['貼心 CARE',90],['安心 SAFE',80],['規劃 PLAN',87]]}};
+function advCard(store,compact){const a=ADVS[store]||ADVS['Digital City 台中逢甲店'];const sk=(S.mySkills&&store==='Digital City 台中逢甲店')?S.mySkills:a.skills;return `<div class="card acard" style="border-left:5px solid ${a.color}">
+ <div style="display:flex;gap:12px;align-items:center"><div class="avt" style="background:${a.color}">${a.ini}</div><div style="flex:1"><div class="rs">人物圖鑑｜${store}</div><b style="font-size:1.08em">${a.nick}</b> <span class="tag ok">生活顧問認證</span> <span class="tag" style="background:#E6EEF8;color:#2B5C9E">居安規劃師</span></div></div>
+ <div style="margin-top:8px">${sk.map(x=>`<span class="tag" style="margin:0 6px 6px 0;display:inline-block">主打技｜${x}</span>`).join('')}</div>
+ ${compact?'':a.stats.map(([n,v])=>`<div style="display:flex;align-items:center;gap:8px;font-size:.85em;margin-top:4px"><span style="width:76px" class="muted">${n}</span><span class="pbar" style="flex:1"><i style="width:${v}%;background:${a.color}"></i></span></div>`).join('')}
+ <div class="rs" style="margin-top:6px">示意角色，延續全國電子門市人物圖鑑形式</div></div>`}
+const OBSQ=[
+ {k:'type',t:'房子的類型',o:['透天','公寓（沒有電梯）','電梯大樓','其他']},
+ {k:'path',t:'臥室走到浴室',o:['同一層，很近','同一層，要走一段','要上下樓']},
+ {k:'light',t:'晚上走廊的照明',o:['很亮','偏暗','幾乎沒有燈']},
+ {k:'lvl',t:'路上有門檻或高低差嗎？',o:['有','沒有']},
+ {k:'slip',t:'浴室地板有防滑嗎？',o:['有','沒有','不確定']},
+ {k:'bar',t:'浴室有扶手嗎？',o:['有','沒有']},
+ {k:'plug',t:'床邊與走廊附近有插座嗎？',o:['有','沒有','不確定']},
+ {k:'wifi',t:'家中有 Wi-Fi 嗎？',o:['有','只有手機網路','沒有']},
+ {k:'ac',t:'冷氣大約用了幾年？',o:['5 年內','5 到 8 年','8 年以上','不清楚']},
+ {k:'near',t:'附近有可以請託查看的人嗎？',o:['有，且有鑰匙','有，但沒有鑰匙','沒有']}];
+function obsRisks(o){const r=[];
+ if(o.light&&o.light!=='很亮')r.push(['夜間走廊偏暗','夜間動線照明：感應夜燈'] );
+ if(o.slip==='沒有'||o.bar==='沒有')r.push(['浴室濕滑或沒有扶手','浴室安心：防滑與扶手（揪心願共鳴中）']);
+ if(o.path==='要上下樓'||o.lvl==='有')r.push(['動線有高低差或樓梯','夜間照明＋門檻提示']);
+ if(o.wifi&&o.wifi!=='有')r.push(['家中沒有 Wi-Fi','關懷前需先處理網路']);
+ if(o.ac==='8 年以上')r.push(['冷氣使用 8 年以上','冷氣清洗與換機評估']);
+ if(o.near==='沒有')r.push(['附近沒有可請託的人','設定就近聯絡人']);
+ return r.length?r:[['目前沒有明顯風險','家電檔案：保固與換季提醒']]}
+
+function obsLights(o){const L=[];
+ L.push(['臥室',o.near==='沒有'?'y':'g',o.near==='沒有'?'附近沒有可請託的人':'無明顯風險']);
+ L.push(['走道',o.light&&o.light!=='很亮'?(o.path==='要上下樓'||o.lvl==='有'?'r':'y'):'g',o.light&&o.light!=='很亮'?'夜間偏暗'+(o.lvl==='有'?'、有門檻':''):'照明足夠']);
+ L.push(['浴室',(o.slip==='沒有'||o.bar==='沒有')?'r':'g',(o.slip==='沒有'||o.bar==='沒有')?'濕滑或沒有扶手':'已有防滑與扶手']);
+ L.push(['廚房',o.ac==='8 年以上'?'y':'g',o.ac==='8 年以上'?'家電使用超過 8 年':'無明顯風險']);
+ L.push(['客廳',o.wifi&&o.wifi!=='有'?'y':'g',o.wifi&&o.wifi!=='有'?'沒有 Wi-Fi':'無明顯風險']);
+ L.push(['門口','g','無明顯風險']);return L}
+Object.assign(V,{
+obs:()=>{const o=S.obs||(S.obs={step:0});
+ if(S.obsDone)return V.obsR();
+ if(o.step===0)return `${hdr('居家觀察｜校園大使任務')}<div class="scroll" style="padding-top:12px">
+  <div class="card"><b>開始前，請先取得同意</b><div class="muted" style="margin:6px 0 10px">觀察只記錄居家環境，不拍人、不記地址、不記健康資訊。結果只給你的家人與綁定門市。</div>
+  ${[['c1','家人同意進行居家觀察'],['c2','長輩本人同意（可由長輩口頭表示）'],['c3','我了解資料只用於提供居家建議']].map(([k,t])=>`<button class="it" data-oc="${k}" style="width:100%"><span class="ck ${o[k]?'on':''}">${o[k]?'✓':''}</span><span>${t}</span></button>`).join('')}</div>
+  <div class="pad"><button class="btn" data-a="obsGo" ${o.c1&&o.c2&&o.c3?'':'disabled'}>開始觀察</button>${o.c1&&o.c2&&o.c3?'':'<p class="muted" style="text-align:center">請先勾選全部同意事項</p>'}</div></div>`;
+ const per=2,i=(o.step-1)*per,qs=OBSQ.slice(i,i+per),tot=Math.ceil(OBSQ.length/per),done=qs.every(q=>o[q.k]);
+ return `${hdr('居家觀察')}<div class="scroll" style="padding-top:8px"><div class="pad">
+  <div class="muted">第 ${o.step}／${tot} 步</div><div class="pbar" style="margin:6px 0 14px"><i style="width:${o.step/tot*100}%"></i></div>
+  ${qs.map(q=>`<div style="margin-bottom:16px"><b>${q.t}</b><div style="margin-top:8px">${q.o.map(x=>`<button class="opt" data-ob="${q.k}|${x}" aria-pressed="${o[q.k]===x}">${x}</button>`).join('')}</div></div>`).join('')}
+  <button class="btn" data-a="obsNext" ${done?'':'disabled'}>${o.step===tot?'產生居家安全檢核結果':'下一步'}</button></div></div>`},
+obsR:()=>{const o=S.obs,r=obsRisks(o).slice(0,3);return `${hdr('居家安全檢核')}<div class="scroll" style="padding-top:12px">
+ <div class="card" style="border-left:4px solid var(--brand)"><b>校園大使專屬推薦碼</b><div style="font-size:1.4em;font-weight:700;letter-spacing:2px;color:var(--brand);margin:6px 0">AMB-FCU-0326</div><div class="muted" style="font-size:.88em">分享給同學家庭預約居家安全評估；營運平台會記錄這個推薦碼帶來的預約與訂閱，推薦成交可獲購物金。</div></div>
+ <div class="card"><div class="rs">長輩家｜${o.type||''}｜由校園大使與家人完成</div><b style="font-size:1.1em">最需要注意的 ${r.length} 件事</b>
+  ${r.map(([a,b],i)=>`<div class="row"><span><b>${i+1}. ${a}</b><span class="muted" style="display:block;font-size:.88em">建議：${b}</span></span></div>`).join('')}</div>
+ <div class="card"><b>各空間燈號</b><div class="rs" style="margin-bottom:4px">依勾選結果自動標示；紅燈優先處理</div>${obsLights(o).map(([n,c,t])=>`<div class="row"><span><span class="dot" style="width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:-1px;background:${c==='r'?'#D4003C':c==='y'?'#E0A030':'#138F3B'}"></span>${n}</span><span class="muted" style="font-size:.88em">${t}</span></div>`).join('')}<div class="muted" style="font-size:.85em;margin-top:6px">這是 ① 先評估的結果。預約後，居安規劃師依檢核結果與 AR 掃描尺寸，把家電與無障礙改善整合成一張報價；尺寸不足時才安排技師到府複量。</div></div>
+ ${(()=>{const m=(S.hh&&S.hh.assessment&&S.hh.assessment.measures)||{};return `<div class="card" style="border-left:4px solid #2B5C9E"><div style="display:flex;justify-content:space-between;align-items:center"><b>AR 掃描場勘</b><span class="tag" style="background:#E6EEF8;color:#2B5C9E">手機量測</span></div>${Object.keys(m).length?measRows(m):'<div class="muted" style="margin-top:4px">尚未量測。做全國電子 AI 顧問阿國居家診斷時，第一步就是 AR 場勘。</div>'}<div class="muted" style="font-size:.85em;margin-top:4px">量測數字附在檢核結果，顧問不必先到府丈量；只存尺寸，不存影像。</div></div>`})()}
+ <div class="sec">推薦的生活顧問</div>${advCard('Digital City 台中逢甲店',true)}
+ <div class="pad"><button class="btn" data-go="b4">帶著檢核結果預約門市</button><button class="btn ghost" data-a="obsWish">把觀察到的需求送出為揪心願</button><button class="btn ghost" data-a="obsShare">分享檢核結果給家人（示意）</button>
+ <p class="muted" style="font-size:.85em">觀察結果以去識別化方式彙整，用於改善情境模板與服務；不包含任何個人資料。</p></div></div>`},
+acard:()=>{const my=S.mySkills||ADVS['Digital City 台中逢甲店'].skills;const ALL=['夜間動線照明規劃','長輩陪同說明','冷氣保養規劃','家電換機評估','晨起平安確認','用電安全規劃'];
+ return `${stf('我的角色卡')}<div class="scroll">
+ <div class="step">延續門市人物圖鑑｜可選 3 項主打技（來自情境模板）</div>
+ ${advCard('Digital City 台中逢甲店')}
+ <div class="ly"><h3>主打技（最多 3 項）</h3>${ALL.map(x=>`<button class="chip" data-sk="${x}" aria-pressed="${my.includes(x)}">${x}</button>`).join('')}</div>
+ <div class="ly"><h3>生活顧問認證｜取自教育訓練系統（示意）</h3>
+  ${[['情境模板與相容性',1],['長輩溝通與陪同模式',1],['隱私與同意',1],['異常處理流程',1]].map(([n,d])=>`<div class="row"><span>${n}</span><span class="tag ok">已完成</span></div>`).join('')}</div>
+ <div class="ly"><h3>進階認證｜居安規劃</h3><div class="row"><span>跌倒風險辨識、評估表與量測</span><span class="tag ok">已完成</span></div><div class="row"><span>長照補助與 1966 轉介</span><span class="tag ok">已完成</span></div><div class="row"><span>無障礙工法與揪夥伴協作</span><span class="tag ok">已完成</span></div><div class="rs">取得認證即擔任家庭的居安規劃師：依長輩作息、家人期待與補助資格，把家電與無障礙改善整合成一張報價；不取代專業評估。</div></div>
+ <div class="ly"><h3>本月門市團隊服務品質</h3><div class="row"><span>三個月續訂率</span><b>86%</b></div><div class="row"><span>顧客回饋</span><b>4.7／5</b></div><div class="rs">以團隊呈現，不做個人排名</div></div></div>`}
+});
+
+Object.assign(V,{
+hc:()=>{const h=(S.hh?S.hh.devices:[]).find(d=>d.id===S.hc);if(!h)return V.m2();const sv=h.old&&h.kwh?Math.round(h.kwh/2):0;return `${hdr('家電健康卡')}<div class="scroll">
+ <div class="card" style="margin-top:12px"><b style="font-size:1.1em">${esc(h.name)}${h.qty>1?' ×'+h.qty:''}</b><div class="muted">${h.home==='parents'?'長輩家':'我家'}・${h.source==='到府安裝'?'到府安裝時登錄':'購買紀錄自動帶入'}</div>
+  ${h.years!=null?`<div class="row"><span>使用年數</span><b>${h.years} 年</b></div>`:''}${h.grade?`<div class="row"><span>能源效率</span><b>${h.grade} 級</b></div>`:''}${h.kwh?`<div class="row"><span>年耗電（估算）</span><b>約 ${h.kwh} 度</b></div>`:''}<div class="row"><span>保固</span><span>${esc(h.warranty||'—')}</span></div></div>
+ ${sv?`<div class="sec">省電估算</div><div class="card" style="background:var(--ok-soft)"><div>換成 1 級能效，每年約可省 <b>${sv} 度電</b>，約 NT$${(sv*4).toLocaleString()} 電費。</div><div class="muted" style="font-size:.85em;margin-top:4px">以每度約 4 元粗估；依據為經濟部能源署公開資料，實際依使用習慣而定。</div></div>
+ <div class="sec">該修就修、該換才換</div><div class="card" style="padding:4px 14px">
+  <div class="row"><span><b style="font-weight:500">1. 先保養</b><span class="muted" style="display:block;font-size:.85em">清洗後通常能恢復冷房效率</span></span><button class="tag" data-req="冷氣清洗">預約清洗</button></div>
+  <div class="row"><span><b style="font-weight:500">2. 仍不夠冷或太耗電，再評估換機</b><span class="muted" style="display:block;font-size:.85em">由生活顧問比較維修與換機；換新與以租代買於擴展期開放</span></span><button class="tag" data-req="換機評估">換機評估</button></div></div>
+ <div class="sec">換機時的回收</div><div class="card"><div>技師安裝新機時一併回收舊機，回收紀錄寫入家電檔案；小家電與廢電池也能帶到門市回收。</div></div>`
+ :`<div class="card" style="background:var(--ok-soft)"><div>${h.grade===1?'已是 1 級能效，':''}目前狀況良好，定期保養能讓它用得更久。</div></div>`}
+ <div class="pad"><button class="btn ghost" data-a="back">回到我的家</button></div></div>`}
+});
+const TSTEPS=[['m','量測動線寬度與門檻','床邊到浴室門口的走道寬度、浴室門檻高度，寫入驗收清單'],['ph0','拍攝施工前照片','只拍設備位置，不拍人；浴室內部須長輩同意'],['g','安裝閘道器並連線','確認家中網路；無 Wi-Fi 時改用行動網路分享器（示意）'],['s','門窗感測器 ×2（浴室門、臥室門）','黏貼於門框，測試開關觸發'],['l','感應夜燈 ×3（床邊、走廊、浴室門口）','依預演位置安裝，確認夜間亮度'],['b','浴室緊急按鈕','安裝於馬桶旁，長輩伸手可及高度'],['scan','掃描設備序號','自動登錄家電檔案（各產品團隊共用）'],['fine','請長輩按一次「我很好」','確認長輩知道怎麼結束詢問'],['test','送出測試通知給家屬','家屬的 App 收到測試訊息'],['ph1','拍攝完工後照片','與施工前照片同角度，附在完工報告'],['rc','包材與廢電池帶回','紙箱、包材與替換下的舊電池帶回門市回收'],['teach','一對一教學與紙本說明','留下家電健康卡，貼在冰箱上']];
+function TS(){return S.tech||(S.tech={st:{},diff:'',done:false,insp:false})}
+Object.assign(V,{
+t1:()=>{const L=S.orders;return `${stf('揪居家｜技師端',false)}<div class="scroll">
+ <div class="step">${esc(S.me.name)}｜${esc(S.me.store||'')}｜${L?L.filter(o=>o.status!=='已完成').length:'—'} 張待完成工單</div>
+ <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span>我的工單</span><button class="tag" data-a="reload">重新整理</button></div>
+ ${L?(L.length?L.map(o=>`<button class="card" data-a="tOpen" data-id="${o.id}" style="display:block;width:calc(100% - 24px);text-align:left;${o.status!=='已完成'?'border-left:4px solid var(--brand)':'opacity:.75'}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(o.label)}　${esc(o.household)}</b><span class="tag ${o.status==='已完成'?'ok':''}">${esc(o.status==='已指派'?'待出發':o.status)}</span></div><div class="muted">${esc(o.kind)}｜${esc((o.plan?CAT.filter(c=>o.plan.sel[c.id]&&c.g&&c.p).map(c=>c.n).join('、'):'')||'依工單')}｜${esc(o.address)}</div>${o.note?`<div style="margin-top:6px"><span class="tag" style="background:#E6EEF8;color:#2B5C9E">${esc(o.note)}</span></div>`:''}</button>`).join(''):'<div class="card muted">目前沒有指派給您的工單。</div>'):'<div class="card muted">載入中…</div>'}
+ <p class="muted pad">技師只看得到工單所需資訊；完整地址在出發當天顯示。</p><div class="pad"><button class="btn ghost" data-go="pw">變更密碼</button><button class="btn ghost" data-a="logout">登出</button></div></div>`},
+t2:()=>{const o=S.order;if(!o)return V.t1();const items=instItems(o),m=o.measures||{};return `${stf('工單詳情')}<div class="scroll">
+ <div class="step">${esc(o.code)}${o.plan&&o.plan.advisor?'｜生活顧問 '+esc(o.plan.advisor)+' 規劃':''}｜統一排程</div>
+ <div class="ly"><h3>到府資訊</h3>
+  <div class="row"><span>時段</span><b>${esc(o.label)}</b></div>
+  <div class="row"><span>地點</span><span style="text-align:right">${esc(o.address)}</span></div>
+  <div class="row"><span>聯絡人</span><span style="text-align:right">${ON()}（家屬）${o.phone?'<span class="muted" style="display:block">'+esc(o.phone)+'</span>':''}</span></div>
+  ${o.note?`<div class="row"><span>備註</span><span style="text-align:right">${esc(o.note)}</span></div>`:''}</div>
+ <div class="ly"><h3>設備清單</h3>${items.length?items.map(([n,q])=>`<div class="row"><span>${esc(n)}</span><b>×${q}</b></div>`).join(''):'<div class="rs">依工單內容</div>'}</div>
+ <div class="ly"><h3>AR 場勘與預演重點</h3>
+  ${Object.keys(m).length?measRows(m):'<div class="rs">尚無量測資料，請於現場量測</div>'}
+  <div class="rs" style="margin-top:4px">長輩已同意安裝，不含任何鏡頭；不顯示長輩作息資料。</div></div>
+ </div>${o.status==='已完成'?'':`<div class="sum"><div><b>預估 1.5 小時</b><div class="rs">依房型與設備數量估算</div></div><button class="btn" data-a="tStart" style="width:auto;padding:12px 18px;margin:0">${o.status==='進行中'?'繼續安裝':'開始安裝'}</button></div>`}`},
+t3:()=>{const t=TS(),n=TSTEPS.filter(x=>t.st[x[0]]).length,all=n===TSTEPS.length;return `${stf('安裝步驟')}<div class="scroll">
+ <div class="step">${esc(S.order?S.order.household:'')}｜已完成 ${n}／${TSTEPS.length}</div>
+ <div class="ly">${TSTEPS.map(([k,a,d])=>`<button class="it" data-ts="${k}"><span class="ck ${t.st[k]?'on':''}">${t.st[k]?'✓':''}</span><span style="flex:1"><b style="font-weight:500">${a}</b><div class="rs">${d}</div></span></button>`).join('')}</div>
+ <div class="ly"><h3>與預演不同？回報差異（選填）</h3>
+  ${['插座位置不同，改用電池型夜燈','浴室門為推拉門，改用不同固定方式','長輩希望夜燈亮度調低'].map(x=>`<button class="chip" data-td="${x}" aria-pressed="${t.diff===x}">${x}</button>`).join('')}
+  <div class="rs" style="margin-top:6px">回報內容會送到總部，用來修正情境模板與房型預演。</div></div>
+ </div>${all?'':'<div class="hintbar">請完成全部安裝步驟</div>'}<div class="sum"><div><b>${n}／${TSTEPS.length} 步驟</b><div class="rs">完工後自動通知家屬與生活顧問</div></div><button class="btn" data-a="tDone" ${all?'':'disabled'} style="width:auto;padding:12px 18px;margin:0">完工並通知家屬</button></div>`},
+t4:()=>{const o=S.order,t=TS(),m=(o&&o.measures)||{},items=instItems(o),n=items.reduce((s,x)=>s+x[1],0);return `${stf('已完工',false)}<div class="scroll">
+ <div class="okbox" style="margin:12px">${esc(o.household)}安裝完成，已通知${ON()}與生活顧問。</div>
+ <div class="ly"><h3>完工紀錄</h3>
+  <div class="row"><span>登錄設備</span><b>${n} 項，已寫入家電檔案</b></div>
+  <div class="row"><span>長輩確認</span><span>已按「我很好」測試</span></div>
+  <div class="row"><span>測試通知</span><span>${ON()}已收到</span></div>
+  <div class="row"><span>完工時間</span><b>${esc((o.completed_at||'').slice(5,16).replace('-','/'))}</b></div>
+  <div class="row"><span>回報差異</span><span style="text-align:right">${esc(o.diff||t.diff||'無')}</span></div>
+  <div class="row"><span>回收</span><span>包材、舊電池帶回門市</span></div></div>
+ <div class="ly"><h3>完工驗收清單</h3>
+  <div class="row"><span>走道寬度（床邊到浴室）</span><b>${m.corridor_cm?m.corridor_cm+' cm':'現場量測'}</b></div>
+  <div class="row"><span>浴室門檻高度</span><b>${m.threshold_cm!=null?m.threshold_cm+' cm'+(m.threshold_cm>=2?'｜已加門檻提示':''):'現場量測'}</b></div>
+  <div class="row"><span>施工前後照片</span><span>依步驟拍攝｜不含人像</span></div>
+  <div class="row"><span>長輩實測</span><span>${EN()}走一次夜間動線 ✓</span></div>
+  <div class="row"><span>完工報告</span><span class="tag ok">已同步到${ON()}的 App</span></div>
+  <div class="rs" style="margin-top:4px">需加裝扶手或移除門檻時，由揪夥伴施工業者報價；可申請長照補助者轉介 1966。</div></div>
+ <div class="pad"><button class="btn ghost" data-a="tBack">回到我的工單</button></div></div>`}
+});
+
+function J(){return S.ph>=9}
+function ringSVG(a){const lit=[1,CAT.some(c=>c.ring===1&&a.sel[c.id]),CAT.some(c=>c.g&&a.sel[c.id]),CAT.some(c=>c.ring===3&&a.later[c.id])];
+ return `<svg viewBox="0 0 120 120" width="112" height="112" role="img" style="flex:none"><title>專屬同心圓</title>${[56,42,28,14].map((r,i)=>{const ri=3-i;const on=lit[ri];return `<circle cx="60" cy="60" r="${r}" fill="${on?RING[ri][1]:'none'}" fill-opacity="${on?(ri===3?.12:.25):0}" stroke="${RING[ri][1]}" stroke-width="1.2" ${ri===3&&on?'stroke-dasharray="3 3"':''}/>`}).join('')}</svg>`}
+function stepBar(){const c=J()?2:S.ph>=3?1:0;const L=[['① 先評估','AR 場勘、全國電子 AI 顧問阿國推薦、居安規劃'],['② 再改善','到府安裝、教學啟用'],['③ 後關心','關懷、語音電話']];
+ return `<div class="s3" aria-label="居家安全三步驟">${L.map(([a,b],i)=>`<div class="${i<c?'dn':i===c?'cu':''}"><b>${i<c?'✓ ':''}${a}</b>${b}</div>`).join('')}</div>`}
+function topCard(){const H=S.hh,ins=H&&H.install,ev=H&&H.care&&H.care[0];
+ const go=J()?'gl':S.ph>=3?'ip':S.ph===2?'pl':S.saved?'b3':'';
+ const t=J()?(ev?ev.when+' '+ev.title:'長輩關懷已啟用｜今日平安'):S.ph>=3?(ins&&ins.slot?'到府安裝：'+ins.label:'已確認方案｜等待排定到府時間'):S.ph===2?'生活顧問已傳送專屬方案':S.booked?'門市諮詢：'+S.booked.slot:S.saved?'全國電子 AI 顧問阿國推薦：'+H.assessment.rec.n:'尚未開始評估';
+ const d=J()?'方案：'+planName(H.plan?H.plan.plan:'basic'):S.ph>=3?(ins&&ins.assignee?'工單 '+ins.code+'｜'+ins.assignee:'工單 '+(ins?ins.code:'')+'｜排定後通知您'):S.ph===2?'請確認方案內容與費用':S.booked?S.booked.store+'｜診斷結果已帶給顧問':S.saved?'下一步：預約門市做居安規劃':'完成 AR 場勘與全國電子 AI 顧問阿國診斷後，這裡會顯示建議';
+ const tag=J()?(ev?`<span class="tag ${ev.outcome==='長輩確認'?'ok':''}">${esc(ev.outcome)}</span>`:'<span class="tag ok">關懷中</span>'):S.ph===2?'<span class="tag">待確認</span>':S.ph>=3?'<span class="tag">安裝進度</span>':S.booked?'<span class="tag">已預約</span>':'';
+ return go?`<button class="card" data-go="${go}" style="display:block;width:calc(100% - 24px);text-align:left"><div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">家人關懷</span>${tag}</div><b>${esc(t)}</b><div class="muted" style="margin-top:2px">${esc(d)} <span class="chev">›</span></div>${stepBar()}</button>`
+ :`<div class="card"><div class="muted">家人關懷</div><b>${esc(t)}</b><div class="muted" style="margin-top:2px">${esc(d)}</div>${stepBar()}</div>`}
+Object.assign(V,{
+pl:()=>{const H=S.hh,p=H&&H.plan;if(!p)return `${hdr('專屬居家方案')}<div class="scroll" style="padding-top:12px"><div class="card muted">生活顧問尚未傳送方案。</div></div>`;const a={sel:p.sel,later:p.later},h=H.household,pend=p.status==='待確認',ins=H.install;
+ return `${hdr('專屬居家方案')}<div class="scroll" style="padding-top:12px">
+ <div class="card"><div class="rs">${esc(p.created_at.slice(5,10).replace('-','/'))}｜${esc(h.store)}｜由生活顧問${esc(p.advisor||'')}規劃</div><b style="font-size:1.12em">${EN()}家｜${esc(planName(p.plan).split('｜')[0])}</b><div class="rs">${a.sel.morning?'臥室與晨起作息':'臥室到浴室'}｜由場域組合的專屬方案</div>
+  <div style="display:flex;gap:12px;align-items:center;margin-top:8px">${ringSVG(a)}<div class="rs" style="line-height:1.75">${CAT.filter(c=>a.sel[c.id]).map(c=>`<div><span class="dot" style="background:${RING[c.ring][1]}"></span> ${c.n}</div>`).join('')}${CAT.filter(c=>a.later[c.id]).map(c=>`<div>○ ${c.n}（之後評估）</div>`).join('')}</div></div></div>
+ <div class="card" style="padding:4px 14px"><div class="row"><span>一次性費用</span><b>${fmt(p.one_time)}</b></div>${p.monthly?`<div class="row"><span>關懷月費</span><span style="text-align:right"><b>${fmt(p.monthly)}／月</b><span class="muted" style="display:block;font-size:.85em">不綁約；年繳 ${fmt(p.yearly)}（10 付 12）</span></span></div><div class="row"><span>兄弟姊妹分攤</span><span class="muted">2 人各約 ${fmt(Math.round(p.monthly/2))}／月</span></div>`:''}<div class="rs" style="padding:4px 0 8px">試點定價，實際依門市盤點；費用於門市或 App 行動支付付款</div></div>
+ ${a.sel.cam?'<div class="card okbox" style="margin:0 12px 12px">'+EN()+'本人同意加裝門口攝影機：平常遮蓋不錄影，只在異常時開放給'+ON()+'查看；臥室與浴室不裝鏡頭。</div>':'<div class="card okbox" style="margin:0 12px 12px">設備不含鏡頭，只記錄門窗與活動；'+EN()+'本人可在門市親自確認。</div>'}
+ ${pend&&!a.sel.cam?'<div class="card" style="display:flex;gap:10px;align-items:center"><span style="flex:1"><b style="font-weight:500">選配：門口攝影機</b><span class="muted" style="display:block;font-size:.85em">異常時可先看畫面再決定是否請鄰居前往；需長輩本人同意</span></span><button class="tag" data-req="加選門口攝影機">請顧問加入</button></div>':''}
+ <div class="card" style="display:flex;gap:10px;align-items:center"><div class="avt" style="background:var(--brand);width:40px;height:40px;font-size:1em">顧</div><div style="flex:1"><b>${esc(p.advisor||'生活顧問')}</b><div class="muted" style="font-size:.88em">${esc(h.store)}｜生活顧問認證</div></div><button class="tag" data-a="lineAdv">請顧問聯絡我</button></div>
+ ${pend?`<div class="sec">到府安裝資料</div><div class="card"><label class="muted">到府地址<input class="fld" id="addr" autocomplete="street-address" value="${esc(h.address||'')}" placeholder="例如：台中市西屯區○○路○號"></label><label class="muted" style="display:block;margin-top:8px">聯絡電話<input class="fld" id="tel" inputmode="tel" autocomplete="tel" value="${esc(h.phone||'')}" placeholder="0912-345-678"></label><div class="rs" style="margin-top:6px">只提供給負責到府的技師，出發當天才顯示完整地址。</div></div>`:''}
+ <div class="pad">${pend?'<button class="btn" data-a="plPay">確認方案</button>':`<div class="okbox">已確認方案。${ins&&ins.slot?'到府安裝：'+esc(ins.label)+(a.sel.clean?'，安裝與冷氣清洗合併到府':''):'門市會排定到府安裝時間，排定後顯示在「安裝進度」。'}</div>`}</div></div>`},
+ip:()=>{const H=S.hh,o=H&&H.install,p=H&&H.plan,sel=p?p.sel:{},m=(H&&H.assessment&&H.assessment.measures)||{};const d=!o?0:o.status==='已完成'?6:Math.max(0,Math.min(5,o.progress||0));const steps=IPSF(sel);
+ return `${hdr('安裝進度')}<div class="scroll" style="padding-top:12px">
+ <div class="card"><div class="rs">工單 ${esc(o?o.code:'—')}</div><b style="font-size:1.08em">${o&&o.slot?esc(o.label)+' 到府安裝':'等待門市排定到府時間'}</b>
+  <div class="row" style="margin-top:4px"><span>技師</span><span>${o&&o.assignee?esc(o.assignee)+'｜關懷設備':'排定後顯示'}</span></div>${sel.clean?'<div class="row"><span>同行</span><span style="text-align:right">冷氣團隊｜合併到府</span></div>':''}</div>
+ <div class="sec">安裝進度 ${d===6?'<span class="tag ok">已完工</span>':d===0?'<span class="tag">'+(o&&o.slot?'已排程':'待排程')+'</span>':'<span class="tag">進行中</span>'}</div>
+ <div class="card tl2">${steps.map(([tm,a,b],i)=>`<div class="st ${i<d?'done':i===d&&d>0?'cur':'todo'}"><span class="tm">${tm}</span><span class="mk">${i<d?'✓':i===d&&d>0?'…':''}</span><span style="flex:1"><b style="font-weight:500">${a}</b><span class="muted" style="display:block;font-size:.85em">${b}</span></span></div>`).join('')}</div>
+ ${d===6?`<div class="card" style="border-left:4px solid var(--ok)"><b>完工報告</b>${m.corridor_cm||m.threshold_cm!=null?`<div class="row" style="margin-top:4px"><span>量測</span><span>${[m.corridor_cm?'走道 '+m.corridor_cm+' cm':'',m.threshold_cm!=null?'門檻 '+m.threshold_cm+' cm':''].filter(Boolean).join('、')}</span></div>`:''}<div class="row"><span>長輩實測</span><span>${EN()}已走一次夜間動線</span></div><div class="muted" style="font-size:.85em;margin-top:2px">技師依驗收清單完成，${esc((o.completed_at||'').slice(5,16).replace('-','/'))} 完工</div></div>`:''}
+ ${o&&o.diff?`<div class="card"><b>現場調整</b><div style="margin-top:4px">${esc(o.diff)}</div><div class="muted" style="font-size:.85em;margin-top:2px">已回報總部，用來修正情境模板</div></div>`:''}
+ <div class="pad"><button class="btn ghost" data-a="ipList">查看設備清單</button></div></div>`},
+gl:()=>{const E=(S.hh&&S.hh.care)||[];const asked=E.filter(e=>e.kind==='act').length,self=E.filter(e=>e.outcome==='長輩確認').length,fam=E.filter(e=>e.outcome==='通知家人').length;
+ return `${hdr('關懷紀錄')}<div class="scroll" style="padding-top:12px">
+ <div class="card"><div class="rs">近期｜長輩家</div><div style="display:grid;grid-template-columns:repeat(3,1fr);text-align:center;margin-top:6px">${[['詢問長輩',asked],['長輩自行確認',self],['通知家人',fam]].map(([n,v])=>`<div><b style="font-size:1.3em">${v}</b><div class="muted" style="font-size:.85em">${n}</div></div>`).join('')}</div></div>
+ ${E.length?E.map(e=>`<div class="card" style="border-left:4px solid ${e.outcome==='通知家人'?'#E07B12':e.kind==='dev'?'#E0A030':'var(--ok)'}"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>${esc(e.when)} ${esc(e.title)}</b><span class="tag ${e.outcome==='長輩確認'?'ok':''}">${esc(e.outcome)}</span></div><div class="tl" style="margin-top:8px">${(e.timeline||[]).map(([a,b])=>`<div><b style="font-weight:500">${esc(a)}</b>　${esc(b)}</div>`).join('')}</div></div>`).join(''):'<div class="card"><b>目前平安</b><div class="muted" style="margin-top:2px">關懷設備正常運作，沒有需要詢問長輩的情況。</div></div>'}
+ <div class="sec">異常時的通知順序</div><div class="card"><div class="chain">${chainHTML()}</div>
+  <div class="rs" style="margin-top:6px;color:var(--brand-ink)">確認可能有危險時，由家人撥打 119。</div></div>
+ <div class="card" style="padding:4px 14px"><button class="row" data-go="nset" style="width:100%"><span>調整判斷時間與通知對象</span><span class="chev">›</span></button><button class="row" data-a="ntStart" style="width:100%"><span>看看異常時會怎麼通知（演練）</span><span class="chev">›</span></button></div>
+ <div class="sec">每週語音電話</div><div class="card"><div class="muted">每週固定時間撥打給${EN()}，接聽後按 1「一切都好」即可，結果回報給家人。語音服務開通後，通話紀錄會顯示在這裡。</div></div></div>`}
+});
+function caseCard(c){const a=c.assessment,r=a&&a.rec,L=a?a.lights.filter(x=>x[1]==='r'||x[1]==='y').map(x=>x[0]+(x[1]==='r'?'紅燈':'黃燈')):[],m=a?a.measures:{};
+ return `<button class="card" data-a="advCase" data-id="${c.id}" style="display:block;width:calc(100% - 24px);text-align:left">
+ <div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(c.label)}　${esc(c.household)}</b><span class="tag ${a?'ok':''}">${a?'診斷已完成':'診斷未完成'}</span></div>
+ <div class="muted">子女${esc(c.owner)}｜${esc(c.elder_note||'')}${r?'｜推薦：'+esc(r.n):''}</div>
+ ${L.length?`<div class="rs" style="margin-top:4px">居家安全檢核：${esc(L.join('、'))}</div>`:''}
+ ${m&&m.corridor_cm?`<div class="rs">AR 場勘：走道 ${m.corridor_cm} cm${m.threshold_cm!=null?'、門檻 '+m.threshold_cm+' cm':''}</div>`:''}
+ <div style="margin-top:6px">${c.status==='待指派'?'<span class="tag">待指派顧問</span>':`<span class="tag" style="background:#E6EEF8;color:#2B5C9E">負責：${esc(c.assignee||'')}</span>`}</div></button>`}
+function ecoEst(devs){const k=(devs||[]).filter(d=>d.grade===1&&d.kwh&&d.source==='購買紀錄').reduce((s,d)=>s+d.kwh,0);return k?Math.round(k*0.5*0.47):0}
+function devReq(d){const n=String(d.name),s=String(d.status||'');if(n.includes('冷氣'))return ['冷氣清洗','預約清洗'];if(s.includes('保固'))return ['延長保固','了解方案'];if(s.includes('濾網'))return ['濾網訂購','訂購'];return ['聯絡生活顧問','詢問']}
+function IPSF(sel){return [['出發','技師已出發','關懷設備安裝團隊'],['到府','到府，開始安裝','先與'+EN()+'確認夜燈位置'],['安裝','關懷設備安裝完成','設備序號登錄到家電檔案'],sel&&sel.clean?['保養','冷氣清洗完成','冷氣團隊同次到府，不用再約一次']:['檢查','網路與通知檢查完成','確認閘道器連線'],['測試',EN()+'測試「我很好」按鈕','長輩知道怎麼結束詢問'],['完工','完工，長輩關懷啟用','完工報告同步到 App']]}
+function chainHTML(){return `<div><b>1</b><span><b style="all:unset;font-weight:700">先問長輩</b>：燈光、語音，再撥家中電話</span></div>
+  <div><b>2</b><span>通知子女${ON()}：LINE 加語音來電</span></div>
+  <div><b>3</b><span>第二聯絡人${CN('第二聯絡人','（尚未設定）')}</span></div>
+  <div><b>4</b><span>就近聯絡人${CN('就近','（尚未設定）')}</span></div>`}
+let stepTimer=null;
+function saveSteps(){const o=S.order;if(!o||o.status!=='進行中')return;clearTimeout(stepTimer);const t=TS();
+ stepTimer=setTimeout(()=>{api('/tech/orders/'+o.id+'/steps',{method:'PUT',body:{steps:t.st,diff:t.diff}}).catch(e=>toast(e.message))},500)}
+function render(){
+ const v=S.stack[S.stack.length-1];setCtx(v);
+ document.documentElement.style.setProperty('--fs',S.big?'18px':'15px');
+ const view=document.getElementById('view');view.innerHTML=(V[v]||V.boot)();if(v==='ar'&&(S.armode||'ar')==='ar')arApply(S.arT||0);
+ if(S.guide&&TIP[v])view.insertAdjacentHTML('afterbegin',`<div class="tip" role="note">導覽：${TIP[v]}</div>`);
+ if(S.fromLog)document.querySelectorAll('#view .sim').forEach(x=>x.remove());
+ const sc=document.querySelector('.scroll');if(sc)sc.scrollTop=0;
+}
+function toC3(){const i=S.stack.lastIndexOf('n0');S.stack=(i>=0?S.stack.slice(0,i+1):S.stack).concat('c3');render()}
+document.getElementById('view').addEventListener('submit',e=>{e.preventDefault();const f=e.target,b=f.querySelector('button[type=submit]'),er=f.querySelector('.err');if(er)er.textContent='';
+ if(f.id==='loginForm')busy(b,async()=>{const d=await api('/auth/login',{method:'POST',body:{email:f.email.value.trim(),password:f.password.value},noAuthRedirect:true});S.me=d.user;await enter()},er);
+ else if(f.id==='regForm')busy(b,async()=>{const body={};['name','email','password','elder_name','elder_note','store','invite'].forEach(k=>body[k]=(f[k].value||'').trim());const d=await api('/auth/register',{method:'POST',body,noAuthRedirect:true});S.me=d.user;await enter()},er);
+ else if(f.id==='pwForm')busy(b,async()=>{await api('/me/password',{method:'POST',body:{old:f.old.value,password:f.password.value}});toast('密碼已更新');back()},er)});
+document.getElementById('view').addEventListener('click',e=>{
+ const t=e.target.closest('button');if(!t||t.disabled)return;
+ if(t.dataset.fill){const f=document.getElementById('loginForm');if(f){f.email.value=t.dataset.fill;f.password.value=S.cfg.demo_password||''}return}
+ if(t.dataset.go){go(t.dataset.go);return}
+ if(t.dataset.hc!==undefined){S.hc=+t.dataset.hc;go('hc');return}
+ if(t.dataset.nav){const n=t.dataset.nav;if(n==='home'||n==='m1'){S.stack=[n];render()}else toast('此分頁維持原 App 功能');return}
+ if(t.dataset.req){sendReq(t.dataset.req);return}
+ if(t.dataset.ans){S.ans[Q[S.qi||0].k]=t.dataset.ans;render();return}
+ if(t.dataset.outlet!==undefined){S.meas.outlets=t.dataset.outlet;render();return}
+ if(t.dataset.store){S.store=t.dataset.store;S.slot=null;S.slots=null;render();loadSlots().then(render).catch(x=>toast(x.message));return}
+ if(t.dataset.slot){S.slot=t.dataset.slot;render();return}
+ if(t.dataset.fam){const f=S.famMine||(S.famMine={});f[t.dataset.fam]=!f[t.dataset.fam];render();savePrefs({fam:f});return}
+ if(t.dataset.wcat){S.wcat=t.dataset.wcat;render();return}
+ if(t.dataset.ns){const n=S.ns;n[t.dataset.ns]=!n[t.dataset.ns];render();savePrefs({ns:n});return}
+ if(t.dataset.care){busy(t,async()=>{await api('/admin/care/'+t.dataset.care+'/followup',{method:'POST'});toast('已完成事後關心');await loadTodos();render()});return}
+ if(t.dataset.rqdone){busy(t,async()=>{await api('/admin/requests/'+t.dataset.rqdone+'/done',{method:'POST'});toast('已標記處理完成');await loadTodos();render()});return}
+ if(t.dataset.me){const id=t.dataset.me;busy(t,async()=>{const d=await api('/wish-topics/'+id+'/vote',{method:'POST'});const tp=S.topics.topics.find(x=>x.id===id);if(tp){tp.c+=d.me?1:-1;tp.me=d.me}render()});return}
+ if(t.dataset.oc){const o=S.obs;o[t.dataset.oc]=!o[t.dataset.oc];render();return}
+ if(t.dataset.ob){const [k,x]=t.dataset.ob.split('|');S.obs[k]=x;render();return}
+ if(t.dataset.sk){let m=[...(S.mySkills||ADVS['Digital City 台中逢甲店'].skills)];const x=t.dataset.sk;if(m.includes(x))m=m.filter(y=>y!==x);else if(m.length<3)m.push(x);else{toast('最多選 3 項');return}S.mySkills=m;render();return}
+ if(t.dataset.ts){const st=TS().st;st[t.dataset.ts]=!st[t.dataset.ts];if(t.dataset.ts==='scan'&&st.scan)toast('已掃描設備序號，登錄到家電檔案');render();saveSteps();return}
+ if(t.dataset.td){const x=TS();x.diff=x.diff===t.dataset.td?'':t.dataset.td;render();saveSteps();return}
+ if(t.dataset.home){S.home=t.dataset.home;render();return}
+ if(t.dataset.goal){const g=A().goals,i=g.indexOf(t.dataset.goal);i>=0?g.splice(i,1):g.push(t.dataset.goal);render();return}
+ if(t.dataset.budget){A().budget=t.dataset.budget;render();return}
+ if(t.dataset.item){const a=A(),c=CAT.find(x=>x.id===t.dataset.item);if(c.lock){toast('家電檔案是所有方案的基礎');return}if(c.exp){toast('揪食光等場域於擴展期開放');return}
+  if(c.later){a.later[c.id]?delete a.later[c.id]:a.later[c.id]=1}else{a.sel[c.id]?delete a.sel[c.id]:a.sel[c.id]=1;if(c.g&&c.id!=='alert'&&hasGuard())a.sel.alert=1;if(!CAT.some(x=>x.g&&x.id!=='alert'&&a.sel[x.id]))delete a.sel.alert}
+  if(c.id==='cam'&&a.sel.cam)toast('需'+EN()+'本人同意；臥室與浴室不裝');
+  render();return}
+ if(t.dataset.sc){ntInit(t.dataset.sc);go(SCF()[t.dataset.sc].type==='act'?'e1':'c1');return}
+ if(t.dataset.role){S.sumRole=t.dataset.role;render();return}
+ if(t.dataset.plan){if(!t.disabled)A().plan=t.dataset.plan;render();return}
+ if(t.dataset.pay){A().pay=t.dataset.pay;render();return}
+ if(t.dataset.cons){const c=A().cons,i=+t.dataset.cons;c[i]=c[i]?0:1;render();return}
+ if(t.dataset.armode){S.armode=t.dataset.armode;S.arT=0;render();return}
+ const a=t.dataset.a;
+ if(a==='back')back();
+ else if(a==='logout')logout();
+ else if(a==='onbDone'){LS.set('jjj_onboard_done','1');render()}
+ else if(a==='big'){S.big=!S.big;render();savePrefs({big:S.big})}
+ else if(a==='guide'){S.guide=!S.guide;render()}
+ else if(a==='reload'){const v=S.stack[S.stack.length-1];if(LOAD[v])busy(t,async()=>{await LOAD[v]();render();toast('已更新')})}
+ else if(a==='loginChild'||a==='loginSelf'||a==='redo'){S.armode='ar';S.arT=0;if(a!=='redo')S.self=(a==='loginSelf');if(S.self)S.big=true;S.qi=0;S.d0=Date.now();S.ans={};const as=S.hh&&S.hh.assessment;S.meas=as?{...as.measures}:{};go('ar')}
+ else if(a==='arScan')arStart();
+ else if(a==='arUse'){S.meas={...S.meas,corridor_cm:AR_RES.corridor_cm,threshold_cm:AR_RES.threshold_cm,bed_bath_m:AR_RES.bed_bath_m,outlets:AR_RES.outlets};S.armode='manual';render();toast('已帶入 AR 掃描結果，可以再修正')}
+ else if(a==='arNext'||a==='arSkip'){if(a==='arSkip')S.meas={};else{const R=S.cfg.measure_range;for(const k in S.meas){const v=S.meas[k];if(v===''||v==null){delete S.meas[k];continue}const n=Number(v);if(!isFinite(n)||n<R[k][0]||n>R[k][1]){toast('請確認量測數字是否正確');return}}}go('b2')}
+ else if(a==='consent'){S.consent=!S.consent;render()}
+ else if(a==='repairList')toast('線上報修維持原 App 功能');
+ else if(a==='prev'){S.qi--;render()}
+ else if(a==='next'){if(S.qi<Q.length-1){S.qi++;render()}else busy(t,async()=>{const dur=S.d0?Math.round((Date.now()-S.d0)/1000):null;applyHome(await api('/assessments',{method:'POST',body:{answers:S.ans,measures:S.meas,filled_by:S.self?'self':'child',duration_s:dur}}));S.d0=null;const i=S.stack.indexOf('b1');S.stack=(i>=0?S.stack.slice(0,i):S.stack.slice(0,1)).concat('b3');render()})}
+ else if(a==='save'){toast('已存到「我的家」');S.home='parents';S.stack=['home','m2'];render()}
+ else if(a==='book')busy(t,async()=>{const st=S.store||S.hh.household.store;const d=await api('/bookings',{method:'POST',body:{store:st,slot:S.slot}});applyHome(d.home);S.slot=null;S.slots=null;S.stack=['home','b5'];render()});
+ else if(a==='toHome2'){S.home='parents';S.stack=['home','m2'];render()}
+ else if(a==='invite')busy(t,async()=>{const d=await api('/home/invite',{method:'POST'});S.invite=d.code;render()});
+ else if(a==='preBuy')busy(t,async()=>{await api('/preorders',{method:'POST'});S.topics.preorder.me=true;S.topics.preorder.count++;toast('已登記預購意向，正式開放付款時會通知您');render()});
+ else if(a==='obsGo'){S.obs.step=1;render()}
+ else if(a==='obsNext'){const tot=Math.ceil(OBSQ.length/2);if(S.obs.step<tot){S.obs.step++;render()}else busy(t,async()=>{S.obs.done=true;await api('/home/observation',{method:'PUT',body:{obs:S.obs}});S.obsDone=true;S.hh.household.obs=S.obs;render()})}
+ else if(a==='obsWish'){const r=obsRisks(S.obs);busy(t,async()=>{applyHome(await api('/wishes',{method:'POST',body:{category:'安全',text:'居家觀察：'+(r[0]?r[0][0]:'居家環境需求'),home:'parents'}}));toast('已送出為揪心願')})}
+ else if(a==='obsShare')toast('家人登入後就能在「我的家」看到檢核結果');
+ else if(a==='lineAdv')sendReq('聯絡生活顧問');
+ else if(a==='aiToggle'){S.aiOpen=!S.aiOpen;render()}
+ else if(a==='aiUse')toast('已採用 AI 建議');
+ else if(a==='aiEdit')toast('已採用並記錄修改原因');
+ else if(a==='aiSkip')toast('已記錄不採用原因');
+ else if(a==='tOpen'){const o=(S.orders||[]).find(x=>String(x.id)===t.dataset.id);if(!o)return;S.order=o;S.tech={st:{...o.steps},diff:o.diff||''};go(o.status==='已完成'?'t4':'t2')}
+ else if(a==='tStart')busy(t,async()=>{let o=S.order;if(o.status==='已指派'){o=await api('/tech/orders/'+o.id+'/start',{method:'POST'});S.order=o}go('t3')});
+ else if(a==='tDone')busy(t,async()=>{const x=TS();clearTimeout(stepTimer);S.order=await api('/tech/orders/'+S.order.id+'/complete',{method:'POST',body:{steps:x.st,diff:x.diff}});S.orders=null;S.stack=['t1','t4'];render()});
+ else if(a==='tBack'){S.stack=['t1'];render();loadOrders().then(render).catch(x=>toast(x.message))}
+ else if(a==='wishSend'){const v=(document.getElementById('wishtxt').value||'').trim();if(!v){toast('請寫下您的心願');return}busy(t,async()=>{applyHome(await api('/wishes',{method:'POST',body:{category:S.wcat||'其他',text:v,home:S.home==='mine'?'mine':'parents'}}));S.wcat='';toast('已送出，門市將於 3 天內回覆');back()})}
+ else if(a==='advCase'){const c=(S.cases||[]).find(x=>String(x.id)===t.dataset.id);if(!c)return;S.case=c;advInit();A().t0=Date.now();go('a2')}
+ else if(a==='escortT'){A().escort=!A().escort;render()}
+ else if(a==='advRec'){recommend();go('a3')}
+ else if(a==='advRep'){A().rep=true;toast('已替換為同平台型號');render()}
+ else if(a==='advReport')toast('已回報給總部知識管理');
+ else if(a==='advQuote')go('a4');
+ else if(a==='advConfirm'){go('a5')}
+ else if(a==='advDone'){const x=A(),c=S.case;busy(t,async()=>{const dur=Math.round((Date.now()-x.t0)/1000);await api('/advisor/plans',{method:'POST',body:{household_id:c.household_id,booking_id:c.id,sel:x.sel,later:x.later,plan:x.plan,pay:x.pay,c2n:x.c2n,c2p:x.c2p,ewish:x.ewish||'',escort:!!x.escort,duration_s:dur}});x.t1=Date.now();S.cases=null;S.stack=['a1','a6'];render()})}
+ else if(a==='advPrint')window.print();
+ else if(a==='advAgain'){S.stack=['a1'];S.cases=null;render();loadCases().then(render).catch(x=>toast(x.message))}
+ else if(a==='famGrand'){S.fam=S.fam||{grand:true};S.fam.grand=!S.fam.grand;toast(S.fam.grand?'已開放孫輩查看簡化摘要':'已取消孫輩查看權限');render();savePrefs({grand:S.fam.grand})}
+ else if(a==='ntStart')go('n0');
+ else if(a==='ntView'){go('c3')}
+ else if(a==='ntCall')toast('演練：撥打給'+EN());
+ else if(a==='ntCenter')toast('演練：撥打 119');
+ else if(a==='ntFine'){nlog(1,''+EN()+'按下「我很好」，流程結束，未通知家人');N().done=''+EN()+'本人';nlog(1440,'隔天：綁定門市確認是否需調整判斷時間');toC3()}
+ else if(a==='ntNoResp'){nlog(0,'燈光與語音詢問'+EN()+'');nlog(5,'自動撥打長輩家中電話，無人接聽');nlog(8,'LINE 與語音電話通知'+ON()+'');go('c1')}
+ else if(a==='ntNear'){nlog(10,''+ON()+'請就近聯絡人'+CN('就近','就近聯絡人')+'前往');go('c2')}
+ else if(a==='ntEsc'){nlog(13,''+ON()+'未回應，依序通知'+CN('第二聯絡人','第二聯絡人')+'與就近聯絡人'+CN('就近','就近聯絡人')+'');go('c2')}
+ else if(a==='ntGo'){nlog(14,''+CN('就近','就近聯絡人')+'回覆：現在過去看看');toast('演練：已通知家人，'+CN('就近','就近聯絡人')+'正在前往')}
+ else if(a==='ntCall119'){nlog(20,''+CN('就近','就近聯絡人')+'到場後撥打 119');N().done=''+CN('就近','就近聯絡人')+'（就近聯絡人）撥打 119';nlog(20,'系統通知'+ON()+'與'+CN('第二聯絡人','第二聯絡人')+'');nlog(24*60,'隔天：綁定門市關心後續，建議加裝扶手');toC3()}
+ else if(a==='ntOk'){const by=t.dataset.by;nlog(t.dataset.near?20:9,by+' 確認平安，停止通知');N().done=by;nlog(24*60,'隔天：綁定門市關心後續、檢視判斷時間');toC3()}
+ else if(a==='plPay'){const ad=(document.getElementById('addr').value||'').trim(),tel=(document.getElementById('tel').value||'').trim();if(!ad||!tel){toast('請填寫到府地址與聯絡電話');return}busy(t,async()=>{applyHome(await api('/plan/confirm',{method:'POST',body:{address:ad,phone:tel}}));toast('已確認方案，門市將排定到府時間');S.stack=['home','m2','ip'];render()})}
+ else if(a==='ipList'){const it=instItems({plan:S.hh.plan});toast(it.length?it.map(([n,q])=>n+' '+q).join('、'):'依工單內容')}
+ else if(a==='ntAgain'){const i=S.stack.lastIndexOf('n0');if(i>=0){S.stack=S.stack.slice(0,i+1);render()}else back()}
+});
+document.getElementById('view').addEventListener('input',e=>{const m=e.target.dataset&&e.target.dataset.meas;if(m){S.meas[m]=e.target.value;return}const a=A();if(!a)return;if(e.target.id==='c2n'){a.c2n=e.target.value;const b=document.querySelector('[data-a="advConfirm"]');if(b)b.disabled=hasGuard()&&!a.c2n.trim();const h=document.getElementById('hintbar');if(h)h.style.display=(hasGuard()&&!a.c2n.trim())?'block':'none'}if(e.target.id==='c2p')a.c2p=e.target.value;if(e.target.id==='ewish')a.ewish=e.target.value});
+boot();
+// 錄製 Demo 影片用：讓自動化腳本能逐格播放 AR 動畫
+window.JJJ={S,arApply,arSheetInner,render};
+})();
+</script>
+<div id="webDemo" style="position:fixed;right:10px;bottom:10px;z-index:9999;font:12px/1.4 sans-serif;background:rgba(43,43,41,.82);color:#fff;border-radius:14px;padding:5px 10px;display:flex;gap:8px;align-items:center">瀏覽器展示版<button onclick="if(this.dataset.arm){JJJWEB.reset()}else{this.dataset.arm=1;this.textContent='再按一次確認重設'}" style="font:inherit;color:#fff;background:#D4003C;border:0;border-radius:10px;padding:2px 8px;cursor:pointer">重設資料</button></div></body>
+</html>
