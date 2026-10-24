@@ -144,7 +144,7 @@ export function mountServiceMap(root, opt = {}) {
     }
     const base = new THREE.Mesh(new THREE.CircleGeometry(320, 64), new THREE.ShadowMaterial({ opacity: .12 })); base.rotation.x = -Math.PI / 2; base.position.y = -.05; base.receiveShadow = true; base.userData.base = 1; scene.add(base);
     label([150, 2, -40], '金門（內嵌）', 'note'); label([150, 2, -125], '連江（內嵌）', 'note');
-    target.set(30, 0, 0); setShadow(240); fly([35, -12], 880, -0.12, 0.42);
+    target.set(30, 0, 0); setShadow(240); fly([30, -6], 640, -0.12, 0.46);
   }
   // ----- 第二層：縣市內行政區與門市建築 -----
   function buildL2() {
