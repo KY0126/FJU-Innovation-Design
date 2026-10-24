@@ -1248,8 +1248,12 @@ document.getElementById('view').addEventListener('click',e=>{
 document.getElementById('view').addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.cmpr){cmpSet(e.target.dataset.cmpr,+e.target.value);return}if(e.target.id==='tdfTxt'&&S.tdf){S.tdf.text=e.target.value;return}const m=e.target.dataset&&e.target.dataset.meas;if(m){S.meas[m]=e.target.value;return}const a=A();if(!a)return;if(e.target.id==='c2n'){a.c2n=e.target.value;const b=document.querySelector('[data-a="advConfirm"]');if(b)b.disabled=hasGuard()&&!a.c2n.trim();const h=document.getElementById('hintbar');if(h)h.style.display=(hasGuard()&&!a.c2n.trim())?'block':'none'}if(e.target.id==='c2p')a.c2p=e.target.value;if(e.target.id==='ewish')a.ewish=e.target.value});
 boot();
 // 錄製 Demo 影片用：讓自動化腳本能逐格播放 AR 動畫
-window.JJJ={S,arApply,arSheetInner,render};
+async function tourDiag(){if(!S.meas||!Object.keys(S.meas).length)S.meas={corridor_cm:AR_RES.corridor_cm,threshold_cm:AR_RES.threshold_cm,bed_bath_m:AR_RES.bed_bath_m,outlets:AR_RES.outlets};
+ const ans={live:'剛開始一個人住',night:'一晚兩次以上',light:'偏暗',phone:'只會接電話',worry:'夜間跌倒沒人知道'};
+ applyHome(await api('/assessments',{method:'POST',body:{answers:ans,measures:S.meas,filled_by:'child',duration_s:S.d0?Math.round((Date.now()-S.d0)/1000):240}}));S.d0=null;S.stack=['home','b3'];render()}
+async function tourDiff(){const o=S.order;if(!o)throw new Error('請先打開張女士家的工單');S.order=await api('/tech/orders/'+o.id+'/diffs',{method:'POST',body:{pin_id:'D2',level:'暫停',text:'大門為鋁框，感測器改用強力背膠並往內移 3 cm',photo:true}});S.tpin='D2';S.ttab='map';S.stack=['t1','tc'];render();toast('已送出：A 施工包暫停，等待門市顧問核准')}
+window.JJJ={S,arApply,arSheetInner,render,go,tourDiag,tourDiff,tourGo:(st,home)=>{if(home)S.home=home;S.stack=st;render()}};
 })();
 </script>
-<div id="webDemo" style="position:fixed;right:10px;bottom:10px;z-index:9999;font:12px/1.4 sans-serif;background:rgba(43,43,41,.82);color:#fff;border-radius:14px;padding:5px 10px;display:flex;gap:8px;align-items:center">瀏覽器展示版<button onclick="if(this.dataset.arm){JJJWEB.reset()}else{this.dataset.arm=1;this.textContent='再按一次確認重設'}" style="font:inherit;color:#fff;background:#D4003C;border:0;border-radius:10px;padding:2px 8px;cursor:pointer">重設資料</button></div></body>
+<div id="webDemo" style="position:fixed;right:10px;bottom:10px;z-index:9999;font:12px/1.4 sans-serif;background:rgba(43,43,41,.82);color:#fff;border-radius:14px;padding:5px 10px;display:flex;gap:8px;align-items:center">瀏覽器展示版<button onclick="if(this.dataset.arm){JJJWEB.reset()}else{this.dataset.arm=1;this.textContent='再按一次確認重設'}" style="font:inherit;color:#fff;background:#D4003C;border:0;border-radius:10px;padding:2px 8px;cursor:pointer">重設資料</button></div><script src="tour.js"></script></body>
 </html>
