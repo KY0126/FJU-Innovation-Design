@@ -3,7 +3,7 @@
   const PAGE = /admin\.html/.test(location.pathname) ? 'admin' : 'app';
   const K = 'jjj_tour_step';
   const LS = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }, del(k) { try { localStorage.removeItem(k); } catch (e) {} } };
-  const WHO = { 'chen@example.com': '陳小姐（子女）', 'advisor@example.com': '王小明（門市顧問）', 'tech@example.com': '吳師傅（技師）', 'manager@example.com': '張經理（總部）' };
+  const WHO = { 'chen@example.com': '陳小姐（子女）', 'li@example.com': '李小姐（關懷中家庭）', 'advisor@example.com': '王小明（門市顧問）', 'tech@example.com': '吳師傅（技師）', 'manager@example.com': '張經理（總部）' };
   const STEPS = [
     { as: 'chen@example.com', sel: '.agq', t: '① 消費者｜從 AI 顧問阿國開始', d: '陳小姐的媽媽剛開始一個人住。全國電子 App 首頁就有全國電子 AI 顧問阿國，點「幫長輩家做居家診斷」。', click: '.agq [data-go="b1"]' },
     { as: 'chen@example.com', sel: '[data-a="loginChild"]', t: '由子女代填', d: '長輩不用操作手機；選「幫長輩填」。', click: '[data-a="loginChild"]' },
@@ -12,13 +12,13 @@
     { as: 'chen@example.com', sel: '#cmp_b3', t: '看懂：安裝前後對比', d: '左右拖曳中間把手：左邊是現在的紅黃綠燈，右邊是安裝後的設備位置。切到「夜間」看感應夜燈亮起的範圍。' },
     { as: 'chen@example.com', sel: '#cmp_b3h', t: '夜間走道實景', d: '同一段 AR 掃描畫面，模擬晚上起床時夜燈一路亮到浴室門口。' },
     { as: 'chen@example.com', sel: '[data-go="share"]', t: '儲存或分享給家人', d: '可以存到「我的家」，或用 LINE 把摘要分享到家人群組（只分享摘要，不含地址與作息）。' },
-    { as: 'chen@example.com', sel: '.card:has([data-rbook])', t: '我的家｜主動提醒', d: '家電檔案會主動提醒：冷氣清洗、保固到期。按「一鍵預約」就送出保養工單草稿，門市確認時段後派工。', act: 'm2', btn: '帶我到「我的家」', click: '[data-rbook]', clickBtn: '幫我一鍵預約' },
+    { as: 'li@example.com', sel: '.card:has([data-rbook])', t: '已啟用的家庭｜主動提醒', d: '換成已經在用揪夜安的李小姐。關懷設備會主動提醒：感測器電量、夜燈年度健檢。按「一鍵預約」就送出維護工單草稿，門市確認時段後派工。', act: 'm2', btn: '帶我到「我的家」', click: '[data-rbook]', clickBtn: '幫我一鍵預約' },
     { as: 'advisor@example.com', sel: '.kp4', t: '② 門市顧問｜今天', d: '王小明登入後先看 4 張指標卡與一句洞察：今日諮詢、待審差異、待派工、方案待確認。剛剛的一鍵預約已經出現在「待派工」。' },
-    { as: 'advisor@example.com', sel: '[data-board]', t: '今日到府：合併到府', d: '張女士家今天三個施工包：揪夥伴扶手（C，已完成）→ 吳師傅關懷設備（A）→ 陳師傅冷氣清洗（B）。點進去看方案圖面。', click: '[data-board]' },
-    { as: 'advisor@example.com', sel: '.pm', t: '規劃：同一張圖，分施工包', d: '每個標記屬於 A／B／C 施工包；點標記再點圖面可移動位置。長輩確認後鎖定版本，之後的變更都有版本紀錄。' },
-    { as: 'tech@example.com', sel: '.card.focus', t: '③ 技師｜今日工作', d: '吳師傅只看到自己的工單，今天的工單聚焦、其他淡化；其他團隊的施工包是灰色。', click: '.card.focus' },
-    { as: 'tech@example.com', sel: '[data-ttab="map"]', t: '照著裝：施工圖層', d: '「我的任務」依施工包過濾，前置未完成會上鎖；切到「圖面」看施工圖層。', click: '[data-ttab="map"]' },
-    { as: 'tech@example.com', sel: '.pm', t: '點標記：完成／拍照／回報差異', d: '藍色是我的待施工、綠色已完成、橘色差異、灰色其他團隊。大門是鋁框，感測器要改用背膠——導覽幫你送出一則「需暫停」的差異回報。', act: 'diff', btn: '幫我回報差異' },
+    { as: 'advisor@example.com', sel: '[data-board]', t: '今日到府：合併到府', d: '張女士家今天兩個施工包：陳師傅先裝夜燈與門檻提示燈條（B，已完成），吳師傅再裝關懷設備（A）。點進去看方案圖面。', click: '[data-board]' },
+    { as: 'advisor@example.com', sel: '.pm', t: '規劃：同一張圖，分施工包', d: '每個標記屬於 A 關懷設備或 B 夜間照明；點標記再點圖面可移動位置。長輩確認後鎖定版本，之後的變更都有版本紀錄。' },
+    { as: 'tech@example.com', sel: '.card.focus', t: '③ 技師｜今日工作', d: '吳師傅只看到自己的工單，今天的工單聚焦、其他淡化；水電技師的施工包是灰色、只能查看。', click: '.card.focus' },
+    { as: 'tech@example.com', sel: '[data-ttab="map"]', t: '照著裝：施工圖層', d: '「我的任務」依施工包過濾：夜間照明（B）完成後，關懷設備（A）才解鎖。切到「圖面」看施工圖層。', click: '[data-ttab="map"]' },
+    { as: 'tech@example.com', sel: '.pm', t: '點標記：完成／拍照／回報差異', d: '紅色是我的待施工、酒紅色打勾是已完成、珊瑚色是差異、灰色是其他團隊。大門是鋁框，感測器要改用背膠——導覽幫你送出一則「需暫停」的差異回報。', act: 'diff', btn: '幫我回報差異' },
     { as: 'advisor@example.com', sel: '#advD', t: '顧問核准差異 → 新版本', d: '差異回報即時出現在顧問的「今天」。核准後圖面產生新版本，技師的施工包自動恢復。', click: '[data-dfok]', clickBtn: '幫我核准' },
     { as: 'manager@example.com', page: 'admin', sel: '#nav', t: '④ 企業營運資訊平台', d: '總部看到的是同一份資料：側欄分成今日工作、服務家庭、揪心願、門市與人員、試點與分析、系統。' },
     { as: 'manager@example.com', page: 'admin', sel: '#nav [data-tab="wo"]', t: '工單', d: '每張工單都有施工包、檢核清單、現場照片與狀態紀錄，剛才的差異核准也在裡面。', click: '#nav [data-tab="wo"]' },
@@ -32,11 +32,11 @@
 #jjjDemo .pn{display:none;background:#fff;color:#2B2B29;border:1px solid #ddd;border-right:0;border-radius:10px 0 0 10px;padding:10px;box-shadow:0 6px 20px rgba(0,0,0,.18);width:190px}
 #jjjDemo.open .pn{display:block}#jjjDemo .pn b{display:block;margin-bottom:6px}#jjjDemo .pn button{display:block;width:100%;margin-top:6px;border:1px solid #ddd;border-radius:8px;background:#fff;padding:6px;cursor:pointer;font:inherit}
 #jjjDemo .pn button.p{background:#D4003C;border-color:#D4003C;color:#fff}
-#jjjMask{position:fixed;z-index:9996;border-radius:12px;box-shadow:0 0 0 9999px rgba(20,20,24,.55);pointer-events:none;transition:all .25s;outline:3px solid #FFD23F}
+#jjjMask{position:fixed;z-index:9996;border-radius:12px;box-shadow:0 0 0 9999px rgba(20,20,24,.55);pointer-events:none;transition:all .25s;outline:3px solid #FFFFFF}
 #jjjCard{position:fixed;z-index:9997;width:min(340px,calc(100vw - 24px));background:#fff;color:#2B2B29;border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.3);padding:14px 14px 12px;font:14px/1.55 "Noto Sans TC",system-ui,sans-serif}
 #jjjCard .n{font-size:12px;color:#D4003C;font-weight:700}#jjjCard h3{margin:2px 0 6px;font-size:16px}#jjjCard p{margin:0 0 10px;color:#4A4945}
 #jjjCard .r{display:flex;gap:6px;flex-wrap:wrap;align-items:center}#jjjCard button{border:1px solid #DDD;background:#fff;border-radius:9px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13px}
-#jjjCard button.p{background:#D4003C;color:#fff;border-color:#D4003C}#jjjCard button.x{margin-left:auto;border:0;color:#888}#jjjCard .who{font-size:12.5px;background:#FFF4D6;color:#5A4300;border-radius:8px;padding:6px 8px;margin-bottom:8px}`;
+#jjjCard button.p{background:#D4003C;color:#fff;border-color:#D4003C}#jjjCard button.x{margin-left:auto;border:0;color:#888}#jjjCard .who{font-size:12.5px;background:#FCE6EC;color:#8F0029;border-radius:8px;padding:6px 8px;margin-bottom:8px}`;
   document.head.appendChild(css);
   // ---------- 示範工具（取代原本擋住按鈕的右下角浮層） ----------
   const old = document.getElementById('webDemo'); if (old) old.remove();
