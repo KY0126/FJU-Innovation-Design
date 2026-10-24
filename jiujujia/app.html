@@ -217,6 +217,12 @@ details.basis summary{cursor:pointer;color:var(--brand);font-size:.9em;margin-to
 .kp4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 12px 10px}.kp4 button{background:var(--card);border-radius:12px;padding:10px 12px;text-align:left;border:1.5px solid transparent}.kp4 b{display:block;font-size:1.5em;line-height:1.2}.kp4 .hot{border-color:var(--brand)}.kp4 .hot b{color:var(--brand)}
 .insight{margin:0 12px 10px;background:var(--note);border-left:4px solid var(--brand);border-radius:10px;padding:9px 12px;font-size:.93em}
 .focus{border-left:5px solid var(--brand)!important}.dimmed{opacity:.5}
+.tmapc{position:sticky;top:0;z-index:3;box-shadow:0 6px 14px rgba(0,0,0,.08)}.tmapc .pm{width:72%;margin:4px auto 0}.tmapc .tlg{justify-content:center;margin-top:4px}
+.pkrow{display:flex;gap:6px;flex-wrap:wrap;margin:0 12px 10px}.pkc{font-size:12.5px;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:5px 9px;color:var(--muted)}.pkc b{display:block;color:var(--ink);font-size:13px}.pkc.me{border-color:var(--brand)}
+.tlg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12.5px;color:var(--muted)}.tlg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.tgrp{background:var(--card);border-radius:14px;margin:0 12px 8px;overflow:hidden}.tgh{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;text-align:left}.tgn{font-weight:700;min-width:44px}.tgd{flex:1;display:flex;gap:4px;flex-wrap:wrap}.tgd i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.tgrp.open .tgh{border-bottom:1px solid var(--line);background:var(--brand-soft)}.trow{border-bottom:1px solid var(--line)}.trow:last-child{border-bottom:0}.trow.sel{background:#FFF7F9}
+.trh{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px}.tno{flex:none;width:28px;height:28px;border-radius:50%;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}.tdet{padding:0 14px 12px 52px}
 .pk{display:inline-block;font-size:12px;border-radius:9px;padding:1px 7px;margin:4px 4px 0 0;color:#fff}
 .hplan .hpw{position:relative;margin-top:8px;border-radius:10px;overflow:hidden;background:#F6F3EE}.hplan .hpw img{display:block;width:100%}.hplan .hpw svg{position:absolute;inset:0;width:100%;height:100%}.hplan .hpr{animation:hpPulse 1.6s ease-in-out infinite}@keyframes hpPulse{50%{fill-opacity:.5}}
 </style>
@@ -250,7 +256,7 @@ function EN(){return esc((S.ctx&&S.ctx.elder)||'長輩')}
 function ON(){return esc((S.ctx&&S.ctx.owner)||'家屬')}
 function CN(r,d){const c=((S.ctx&&S.ctx.contacts)||[]).find(x=>String(x.r||'').includes(r));return esc(c?c.n:d)}
 function STORE(){return esc((S.hh&&S.hh.household.store)||(S.me&&S.me.store)||'綁定門市')}
-const ADV_V=['a1','a2','a3','a4','a5','a6','d3','acard','apm','aec'],TECH_V=['t1','t2','t3','t4','tc','tp','tdf'];
+const ADV_V=['a1','a2','a3','a4','a5','a6','d3','acard','apm','aec'],TECH_V=['t1','t2','t3','t4','tc','tp','tdf','tacc'];
 function setCtx(v){const blank={elder:'長輩',owner:'家屬',contacts:[]};
  if((v==='apm'||v==='aec')&&S.board){S.ctx={elder:S.board.elder_name,owner:'家屬',contacts:[]}}
  else if(ADV_V.includes(v)){const c=S.case;S.ctx=c?{elder:c.elder_name,owner:c.owner,contacts:[]}:blank}
@@ -889,7 +895,7 @@ t4:()=>{const o=S.order,t=TS(),m=(o&&o.measures)||{},items=instItems(o),n=items.
  ${(o.packages||[]).length?`<div class="ly"><h3>施工包</h3>${o.packages.map(k=>`<div class="row"><span><span class="dot" style="background:${k.status==='已完成'?'var(--ok)':PKC[k.code]}"></span> ${k.code} ${esc(k.name)}<span class="rs" style="display:block">${esc(k.team)}${k.assignee?'｜'+esc(k.assignee):''}</span></span><span class="tag ${k.status==='已完成'?'ok':''}">${esc(k.status)}</span></div>`).join('')}${o.pv?`<div class="rs" style="margin-top:4px">施工依圖面 v${o.pv.ver}（${esc(o.pv.status)}）</div>`:''}</div>`:''}
  <div class="ly"><h3>完工紀錄</h3>
   <div class="row"><span>登錄設備</span><b>${n} 項，已寫入家電檔案</b></div>
-  <div class="row"><span>長輩確認</span><span>已按「我很好」測試</span></div>
+  <div class="row"><span>驗收</span><span style="text-align:right">${o.acceptance&&o.acceptance.result==='通過'?esc(o.acceptance.by_name)+'（'+esc(o.acceptance.by_role)+'）'+esc(o.acceptance.when)+' 驗收通過':'等待驗收'}<span class="muted" style="display:block;font-size:.85em">摘要已同步到${ON()}的 App</span></span></div>
   <div class="row"><span>測試通知</span><span>${ON()}已收到</span></div>
   <div class="row"><span>完工時間</span><b>${o.completed_at?esc(o.completed_at.slice(5,16).replace('-','/')):'其他施工包進行中'}</b></div>
   <div class="row"><span>回報差異</span><span style="text-align:right">${(o.diffs||[]).length?o.diffs.map(d=>esc(d.text)+'（'+esc(d.status)+'）').join('<br>'):esc(o.diff||t.diff||'無')}</span></div>
@@ -932,6 +938,8 @@ ip:()=>{const H=S.hh,o=H&&H.install,p=H&&H.plan,sel=p?p.sel:{},m=(H&&H.assessmen
  return `${hdr('安裝進度')}<div class="scroll" style="padding-top:12px">
  <div class="card"><div class="rs">工單 ${esc(o?o.code:'—')}</div><b style="font-size:1.08em">${o&&o.slot?esc(o.label)+' 到府安裝':'等待門市排定到府時間'}</b>
   <div class="row" style="margin-top:4px"><span>技師</span><span>${o&&o.assignee?esc(o.assignee)+'｜關懷設備':'排定後顯示'}</span></div>${sel.night?'<div class="row"><span>同行</span><span style="text-align:right">水電技師｜夜間照明先裝</span></div>':''}</div>
+ ${o&&o.status==='待驗收'?`<div class="card" style="border:2px solid var(--brand)"><b>技師已完工，請確認</b><div class="muted" style="margin:4px 0 8px">${EN()}可以在現場跟技師一起驗收；你也可以在這裡確認。</div><textarea class="fld" id="famRej" rows="2" placeholder="有問題的話寫在這裡，例如：浴室門口夜燈太亮"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" style="margin:0" data-a="famAcc">驗收完成</button><button class="btn ghost" style="margin:0" data-a="famRej">有問題，退回</button></div></div>`:''}
+ ${H.acceptance&&H.acceptance.result==='通過'?`<div class="card" style="border-left:4px solid var(--ok)"><b>已驗收</b><div class="muted">${esc(H.acceptance.by_name)}（${esc(H.acceptance.by_role)}）${esc(H.acceptance.when)} 驗收通過，長輩關懷已啟用</div></div>`:''}
  ${(H.packages||[]).length?`<div class="sec">施工包｜統一排程、合併到府</div><div class="card" style="padding:4px 14px">${H.packages.map(k=>`<div class="row"><span><span class="dot" style="background:${k.status==='已完成'?'var(--ok)':PKC[k.code]}"></span> <b style="font-weight:500">${esc(k.name)}</b><span class="muted" style="display:block;font-size:.85em">${esc(k.team)}${k.assignee?'｜'+esc(k.assignee):''}</span></span><span class="tag ${k.status==='已完成'?'ok':''}">${k.status==='已完成'?'✓ 已完成':esc(k.status)}</span></div>`).join('')}</div>`:''}
  <div class="sec">安裝進度 ${d===6?'<span class="tag ok">已完工</span>':d===0?'<span class="tag">'+(o&&o.slot?'已排程':'待排程')+'</span>':'<span class="tag">進行中</span>'}</div>
  <div class="card tl2">${steps.map(([tm,a,b],i)=>`<div class="st ${i<d?'done':i===d&&d>0?'cur':'todo'}"><span class="tm">${tm}</span><span class="mk">${i<d?'✓':i===d&&d>0?'…':''}</span><span style="flex:1"><b style="font-weight:500">${a}</b><span class="muted" style="display:block;font-size:.85em">${b}</span></span></div>`).join('')}</div>
@@ -1046,27 +1054,38 @@ aec:()=>{const B=S.board;if(!B)return V.apm();const pv=B.pv,pins=pv?pv.pins:[],a
  <div class="card"><b>會裝這些</b>${pins.filter(p=>p.k!=='note').map(p=>`<div class="row"><span><span class="dot" style="background:${PKC[p.pkg]}"></span> ${esc(p.label)}</span><span class="rs">${esc(p.room||'')}</span></div>`).join('')}</div>
  <div class="card okbox" style="margin:0 12px 12px">不裝鏡頭、不錄音。晚上起床燈會自己亮；沒事時按一下「我很好」就好。</div>
  <div class="pad"><button class="btn" data-a="elderOk">${EN()}同意，鎖定這個版本</button><button class="btn ghost" data-a="back">還要再調整</button></div></div>`},
-// 技師：案場（我的任務／圖面／案場資訊）
-tc:()=>{const o=S.order;if(!o)return V.t1();const tab=S.ttab||'task',mine={},lock={};(o.packages||[]).forEach(k=>{if(k.mine)mine[k.code]=1;if(k.locked)lock[k.code]=1});
- const tabs=`<div class="tabs" role="tablist">${[['task','我的任務'],['map','圖面'],['info','案場資訊']].map(([k,n])=>`<button role="tab" aria-selected="${tab===k}" data-ttab="${k}">${n}</button>`).join('')}</div>`;
+// 技師：施工（上圖只標號碼、下方依區域展開清單）／案場資訊
+tc:()=>{const o=S.order;if(!o)return V.t1();const tab=S.ttab==='info'?'info':'work';
+ const tabs=`<div class="tabs" role="tablist">${[['work','施工'],['info','案場資訊']].map(([k,n])=>`<button role="tab" aria-selected="${tab===k}" data-ttab="${k}">${n}</button>`).join('')}</div>`;
  let body='';
- if(tab==='task')body=`${(o.packages||[]).map(k=>{const dim=!k.mine,done=k.status==='已完成';const n=k.code==='A'?TSTEPS.filter(x=>(o.steps||{})[x[0]]).length:Object.keys(k.steps||{}).length,tot=k.code==='A'?TSTEPS.length:(k.step_names||[]).length;
-  return `<div class="card" style="${dim?'opacity:.5;':''}border-left:5px solid ${done?'var(--ok)':k.status==='暫停'?'#FF7A59':PKC[k.code]}"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>${k.code}｜${esc(k.name)}</b><span class="tag ${done?'ok':''}" ${k.status==='暫停'?'style="background:#FFE3DA;color:#B33A1C"':''}>${esc(k.status)}</span></div>
-  <div class="muted" style="font-size:.88em">${esc(k.team)}${k.assignee?'｜'+esc(k.assignee):''}${dim?'｜其他團隊，只能查看':''}</div>
-  ${k.locked?`<div class="warn" style="margin-top:6px">🔒 需等 ${k.prereq} 完成後才能開始</div>`:k.prereq?`<div class="rs" style="margin-top:4px;color:var(--ok)">✓ 前置 ${k.prereq} 已完成</div>`:''}
-  <div class="pbar" style="margin:8px 0 2px"><i style="width:${tot?Math.round(n/tot*100):0}%;background:${done?'var(--ok)':PKC[k.code]}"></i></div><div class="rs">${n}／${tot} 步驟</div>
-  ${!dim&&!done&&!k.locked?`<button class="btn" data-pkgo="${k.code}" style="margin-top:8px">${k.status==='進行中'||k.status==='暫停'?'繼續':'開始'}${k.code==='A'?'安裝':'施工'}</button>`:''}</div>`}).join('')||'<div class="card muted">此工單沒有施工包</div>'}
+ if(tab==='work'){const T=taskList(o),sel=T.find(t=>t.key===S.tsel),open=S.topen||(sel&&sel.group)||(T.find(t=>t.mine&&!t.done&&!t.locked)||{}).group||null,groups=[...new Set(T.map(t=>t.group))];
+  const pk=(o.packages||[]).map(k=>{const mine=T.filter(t=>t.pkg===k.code),d=mine.filter(t=>t.done).length;return `<span class="pkc ${k.mine?'me':''}"><b>${k.code} ${esc(k.name)}</b>${esc(k.assignee||k.team)}${k.mine?'（我）':''}｜${k.status==='已完成'?'已完成':k.locked?'等前置':d+'／'+mine.length}</span>`}).join('');
+  body=`<div class="pkrow">${pk}</div>
+  ${o.status==='待驗收'?`<div class="card" style="border:2px solid var(--brand)"><b>全部施工完成，等待驗收</b><div class="muted" style="font-size:.9em">請${EN()}跟著你走一次動線，逐區確認。</div></div>`:''}
+  <div class="card tmapc" style="padding:8px 12px"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>施工圖</b>${verTag(o.pv)}</div>${numMap(T,{sel:S.tsel,open})}
+  <div class="tlg">${Object.entries(TSC).map(([k,[c,n]])=>`<span><i style="background:${c}"></i>${n}</span>`).join('')}</div></div>
+  ${groups.map(g=>{const L=T.filter(t=>t.group===g),d=L.filter(t=>t.done).length,on=open===g,cs=L.map(tState);
+   return `<div class="tgrp ${on?'open':''}"><button class="tgh" data-tgrp="${g}" aria-expanded="${on}"><span class="tgn">${g}</span><span class="tgd">${cs.map(c=>`<i style="background:${TSC[c][0]}"></i>`).join('')}</span><span class="muted">${d}／${L.length}</span><span class="chev">${on?'⌃':'⌄'}</span></button>
+   ${on?L.map(t=>{const c=tState(t),me=pkMine(o,t.pkg),k=(o.packages||[]).find(x=>x.code===t.pkg),isSel=S.tsel===t.key;
+    return `<div class="trow ${isSel?'sel':''}"><button class="trh" data-tsel="${t.key}"><span class="tno" style="background:${TSC[c][0]}">${t.done?'✓':t.no}</span><span style="flex:1;text-align:left">${esc(t.label)}<span class="muted" style="display:block;font-size:.82em">${t.pkg} ${PKN[t.pkg]||''}｜${TSC[c][1]}</span></span><span class="chev">${isSel?'⌃':'›'}</span></button>
+    ${isSel?`<div class="tdet"><div class="muted" style="font-size:.9em">${esc(t.detail||'')}</div>
+     ${!me?`<div class="rs" style="margin-top:6px">由${esc(k?(k.assignee||k.team):'其他團隊')}（${esc(k?k.team:'')}）負責，只能查看</div>`:k&&k.locked?`<div class="warn">需等 ${k.prereq} 完成後才能施作</div>`:o.status==='待驗收'?'':`<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">${t.photo?`<button class="btn ghost" style="margin:0;flex:1" data-a="tPhoto">${S.photo&&S.photo[t.key]?'✓ 已拍照':'拍照'}</button>`:''}<button class="btn" style="margin:0;flex:1" data-tdone="${t.key}" ${t.done||(t.photo&&!(S.photo&&S.photo[t.key]))?'disabled':''}>${t.done?'已完成':'完成'}</button>${t.pin?`<button class="btn ghost" style="margin:0;flex:1" data-a="tDiffGo">回報差異</button>`:''}</div>${t.photo&&!(S.photo&&S.photo[t.key])&&!t.done?'<div class="rs" style="margin-top:4px">這一項要先拍照，才能按完成（只拍設備位置，不拍人）</div>':''}`}</div>`:''}</div>`}).join(''):''}</div>`}).join('')}
   ${(o.diffs||[]).length?`<div class="sec">差異回報</div><div class="card" style="padding:4px 14px">${o.diffs.map(d=>`<div class="row" style="align-items:flex-start"><span>${esc(d.text)}<span class="muted" style="display:block;font-size:.85em">${esc(d.when)}｜${esc(d.by_name||d.by||'')}${d.status==='已核准'?'｜已核准，圖面 v'+d.new_ver:''}</span></span><span class="tag ${d.status==='已核准'?'ok':''}">${d.level==='暫停'&&d.status==='待審核'?'暫停中':esc(d.status)}</span></div>`).join('')}</div>`:''}`;
- else if(tab==='map'){const pins=o.pv?o.pv.pins:[],sp=pins.find(p=>p.id===S.tpin),k=sp&&(o.packages||[]).find(x=>x.code===sp.pkg);
-  body=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b>施工圖層</b>${verTag(o.pv)}</div>${planMap(pins,{byStatus:true,mine,lockPkg:lock,sel:S.tpin})}
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px" class="rs"><span><span class="dot" style="background:${STC.plan}"></span> 我的待施工</span><span><span class="dot" style="background:${STC.done}"></span> 已完成</span><span><span class="dot" style="background:${STC.diff}"></span> 差異</span><span><span class="dot" style="background:${STC.lock}"></span> 其他團隊／未解鎖</span></div></div>
-  ${sp?`<div class="card" style="border:1.5px solid ${pinColor(sp,{byStatus:true,mine,lockPkg:lock})}"><b>${esc(sp.label)}</b><div class="muted" style="font-size:.88em">${sp.pkg} ${PKN[sp.pkg]}｜${esc(sp.room||'')}${sp.note?'｜'+esc(sp.note):''}</div>
-   ${sp.k==='note'?'<div class="rs" style="margin-top:6px">現場注意事項</div>':k&&k.mine&&!k.locked?`<div style="display:flex;gap:8px;margin-top:8px"><button class="btn" style="margin:0" data-pinst="${sp.st==='done'?'plan':'done'}">${sp.st==='done'?'取消完成':'完成'}</button><button class="btn ghost" style="margin:0" data-a="tPhoto">拍照</button><button class="btn ghost" style="margin:0" data-a="tDiffGo">回報差異</button></div>`:`<div class="rs" style="margin-top:6px">${k&&k.locked?'前置施工包未完成':'由'+esc(k?k.team:'其他團隊')+'負責，只能查看'}</div>`}</div>`:'<div class="pad muted">點圖上的標記，可標示完成、拍照或回報差異。</div>'}`}
- else{const items=instItems(o),m=o.measures||{};body=`<div class="ly"><h3>到府資訊</h3><div class="row"><span>時段</span><b>${esc(o.label)}</b></div><div class="row"><span>地點</span><span style="text-align:right">${esc(o.address)}</span></div><div class="row"><span>聯絡人</span><span style="text-align:right">${ON()}（家屬）${o.phone?'<span class="muted" style="display:block">'+esc(o.phone)+'</span>':''}</span></div>${o.note?`<div class="row"><span>備註</span><span style="text-align:right">${esc(o.note)}</span></div>`:''}</div>
+  const bar=techBar(o,T);body+='</div>'+bar;return `${stf(esc(o.household)+'｜'+esc(o.code))}<div class="scroll"><div class="step">${esc(o.label)}｜${esc(o.kind)}｜統一排程、合併到府</div>${tabs}${body}`}
+ const items=instItems(o),m=o.measures||{};body=`<div class="ly"><h3>到府資訊</h3><div class="row"><span>時段</span><b>${esc(o.label)}</b></div><div class="row"><span>地點</span><span style="text-align:right">${esc(o.address)}</span></div><div class="row"><span>聯絡人</span><span style="text-align:right">${ON()}（家屬）${o.phone?'<span class="muted" style="display:block">'+esc(o.phone)+'</span>':''}</span></div>${o.note?`<div class="row"><span>備註</span><span style="text-align:right">${esc(o.note)}</span></div>`:''}</div>
   <div class="ly"><h3>設備清單</h3>${items.length?items.map(([n,q])=>`<div class="row"><span>${esc(n)}</span><b>×${q}</b></div>`).join(''):'<div class="rs">依工單內容</div>'}</div>
   <div class="ly"><h3>AR 掃描（場勘）量測</h3>${Object.keys(m).length?measRows(m):'<div class="rs">尚無量測資料，請於現場量測</div>'}<div class="rs" style="margin-top:4px">長輩已同意安裝，不含任何鏡頭；不顯示長輩作息資料。</div></div>
-  ${(o.log||[]).length?`<div class="ly"><h3>狀態紀錄</h3><div class="tl">${o.log.map(x=>`<div><b style="font-weight:500">${esc(x.when)}</b>　${esc(x.name||'')}｜${esc(x.action)}${x.detail?'<span class="rs">（'+esc(x.detail)+'）</span>':''}</div>`).join('')}</div></div>`:''}`}
+  ${(o.log||[]).length?`<div class="ly"><h3>狀態紀錄</h3><div class="tl">${o.log.map(x=>`<div><b style="font-weight:500">${esc(x.when)}</b>　${esc(x.name||'')}｜${esc(x.action)}${x.detail?'<span class="rs">（'+esc(x.detail)+'）</span>':''}</div>`).join('')}</div></div>`:''}`;
  return `${stf(esc(o.household)+'｜'+esc(o.code))}<div class="scroll"><div class="step">${esc(o.label)}｜${esc(o.kind)}｜統一排程、合併到府</div>${tabs}${body}</div>`},
+// 技師：請長輩驗收（大字，逐區確認）
+tacc:()=>{const o=S.order;if(!o)return V.t1();const T=taskList(o),areas=[...new Set(T.map(t=>t.group))].filter(g=>g!=='開工'),A=S.acc||(S.acc={}),all=areas.every(g=>A[g]===1),bad=areas.filter(g=>A[g]===0);
+ return `${stf('請'+EN()+'驗收')}<div class="scroll tacc" style="font-size:1.1em">
+ <div class="step">把手機轉給${EN()}看｜一起走一次夜間動線</div>
+ ${areas.map((g,i)=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>${i+1}. ${g}</b>${A[g]===1?'<span class="tag ok">沒問題</span>':A[g]===0?'<span class="tag">有問題</span>':''}</div><div style="margin:4px 0 8px">${ACHK[g]||'確認這一區都裝好了'}</div>
+  <div style="display:flex;gap:8px"><button class="btn ${A[g]===1?'':'ghost'}" style="margin:0" data-acc="${g}|1">沒問題</button><button class="btn ghost" style="margin:0;${A[g]===0?'border-color:var(--brand);color:var(--brand)':''}" data-acc="${g}|0">有問題</button></div></div>`).join('')}
+ ${bad.length?`<div class="card"><b>哪裡有問題？</b><textarea class="fld" id="accNote" rows="2" placeholder="例如：浴室門口夜燈太亮">${esc(S.accNote||'')}</textarea></div>`:''}
+ <div class="card okbox" style="margin:0 12px 12px">驗收結果會同步到${ON()}的 App；${ON()}也可以在 App 上確認。</div></div>
+ <div class="sum"><div style="font-size:.9em"><b>${areas.filter(g=>A[g]===1).length}／${areas.length} 區沒問題</b></div>${bad.length?`<button class="btn" data-a="accNo" style="width:auto;padding:12px 16px;margin:0">退回修正</button>`:`<button class="btn" data-a="accOk" ${all?'':'disabled'} style="width:auto;padding:12px 16px;margin:0">${EN()}確認，驗收完成</button>`}</div>`},
 // 技師：B／C／S 施工包步驟（一次只亮一步）
 tp:()=>{const o=S.order,k=o&&(o.packages||[]).find(x=>x.code===S.tpkg);if(!k)return V.tc();const names=k.step_names||[],st=S.pst||{},cur=names.findIndex((_,i)=>!st[i]),all=cur<0;
  return `${stf(k.code+'｜'+esc(k.name))}<div class="scroll"><div class="step">${esc(o.household)}｜已完成 ${names.filter((_,i)=>st[i]).length}／${names.length}</div>
@@ -1091,6 +1110,52 @@ async function openBoard(hid){S.board=await api('/advisor/plan/'+hid);S.pmPins=n
 async function refreshOrder(){if(!S.order)return;S.order=await api('/tech/orders/'+S.order.id)}
 function cmpSet(id,p){CMP[id]=CMP[id]||{};CMP[id].p=p;const w=document.querySelector('#cmp_'+id+' .cmpw');if(w)w.style.setProperty('--p',p+'%')}
 
+// ===== 技師施工清單：依區域分組、依施工順序編號；圖上只標號碼 =====
+const TSC={todo:['#D4003C','待施工'],done:['#6E1A35','已完成'],diff:['#FF7A59','差異／暫停'],other:['#BDBBB5','其他團隊／未解鎖']};
+const ACHK={'臥室':'從床上起身，床邊夜燈會自己亮','走道':'走到走道，夜燈一路亮到浴室門口','浴室':'浴室門檻燈條看得到，緊急按鈕坐著也按得到','玄關':'開關一次大門，家人手機收到測試','客廳':'閘道器燈號正常','收尾':'按一次「我很好」，詢問就結束；說明卡貼在床邊'};
+const PIN_SPEC={light:'感應小夜燈｜離地約 30 cm、朝走道方向',door:'門窗感測器｜貼在門框上緣，磁條對齊',btn:'浴室緊急按鈕｜馬桶旁，坐著伸手按得到',gw:'閘道器｜客廳插座旁，離地 1 公尺以上',motion:'人體感測器｜牆角約 2 公尺高',strip:'門檻提示燈條｜貼在門檻前緣',outlet:'床邊插座｜由水電技師加裝'};
+function pkMine(o,c){const k=(o.packages||[]).find(x=>x.code===c);return !!(k&&k.mine)}
+function tState(t){if(t.done)return 'done';if(t.pin&&t.pin.st==='diff'||t.paused)return 'diff';if(!t.mine||t.locked)return 'other';return 'todo'}
+function taskList(o){const pins=(o.pv?o.pv.pins:[]).filter(p=>p.k!=='note'),pk=o.packages||[],P=c=>pk.find(k=>k.code===c),st=o.steps||{},T=[];
+ const add=(group,pkg,key,label,detail,done,extra={})=>{const k=P(pkg);T.push({group,pkg,key,label,detail,done,mine:!!(k&&k.mine),locked:!!(k&&k.locked),paused:!!(k&&k.status==='暫停'),...extra})};
+ const A=P('A'),B=P('B'),RO=['臥室','走道','浴室','玄關','客廳'];
+ if(B)add('開工','B','B:0','確認床邊與走道插座','沒有插座的位置改用電池型夜燈',!!(B.steps||{})[0]);
+ if(A){add('開工','A','A:ph0','施工前整體照片','只拍設備位置，不拍人；浴室內部須長輩同意',!!st.ph0,{photo:1});add('開工','A','A:m','複核走道寬與門檻高','和 AR 掃描（場勘）的尺寸比對，差太多就回報差異',!!st.m)}
+ pins.slice().sort((a,b)=>(a.pkg===b.pkg?0:a.pkg==='B'?-1:1)).forEach(p=>add(RO.includes(p.room)?p.room:'客廳',p.pkg,'pin:'+p.id,p.label,(PIN_SPEC[p.k]||'')+(p.note?'｜圖面備註：'+p.note:''),p.st==='done',{pin:p}));
+ if(B){add('收尾','B','B:3','關燈測試感應距離與亮度','從床邊走到浴室，三盞夜燈依序亮起',!!(B.steps||{})[3]);add('收尾','B','B:4','夜間照明完工照片','只拍夜燈位置',!!(B.steps||{})[4],{photo:1})}
+ if(A){add('收尾','A','A:fine','請長輩按一次「我很好」','確認長輩知道怎麼結束詢問',!!st.fine);add('收尾','A','A:test','送出測試通知給家屬','家屬的 App 收到測試訊息',!!st.test);add('收尾','A','A:teach','一對一教學與說明卡','說明卡貼在床邊',!!st.teach);add('收尾','A','A:ph1','完工整體照片','和施工前同角度',!!st.ph1,{photo:1});add('收尾','A','A:rc','包材與廢電池帶回','帶回門市回收',!!st.rc)}
+ if(!A&&!B&&pk[0])(pk[0].step_names||[]).forEach((n,i)=>add('檢修',pk[0].code,pk[0].code+':'+i,n,'',!!(pk[0].steps||{})[i]));
+ const GO=['開工',...RO,'收尾','檢修'];T.sort((a,b)=>GO.indexOf(a.group)-GO.indexOf(b.group));T.forEach((t,i)=>t.no=i+1);return T}
+// 施工圖：只畫號碼，顏色＝狀態；展開某區時其他號碼淡化
+function numMap(T,{sel,open}={}){let g='';for(const t of T){if(!t.pin)continue;const p=t.pin,[x,y]=hpp(p.x,HPJ.FT+.35,p.y),c=TSC[tState(t)][0],on=sel===t.key,dim=open&&t.group!==open&&!on,r=on?30:23;
+  g+=`<g data-tpin="${t.key}" style="cursor:pointer;opacity:${dim?.28:1}" transform="translate(${x.toFixed(0)},${y.toFixed(0)})">${on?`<circle r="${r+12}" fill="none" stroke="${c}" stroke-width="5"/>`:''}<circle r="${r}" fill="${c}" stroke="#fff" stroke-width="5"/><text y="${r*.36}" font-size="${r*1.05}" font-weight="700" text-anchor="middle" fill="#fff">${t.done?'✓':t.no}</text></g>`}
+ return `<div class="hpw pm"><img src="home/plan.jpg" alt="${EN()}家施工圖"><svg viewBox="${HPV.join(' ')}">${hpPath()}${g}</svg></div>`}
+function techBar(o,T){const me=(o.packages||[]).filter(k=>k.mine);if(!me.length)return '';
+ if(o.status==='待驗收')return `<div class="sum"><div style="font-size:.9em"><b>全部完成</b><div class="rs">等待${EN()}驗收</div></div><button class="btn" data-a="tAccGo" style="width:auto;padding:12px 16px;margin:0">請${EN()}驗收</button></div>`;
+ if(o.status==='已完成')return '';
+ const k=me.find(x=>x.status!=='已完成');if(!k)return `<div class="sum"><div style="font-size:.9em"><b>我的部分已完成</b><div class="rs">等待其他團隊</div></div></div>`;
+ const L=T.filter(t=>t.pkg===k.code),d=L.filter(t=>t.done).length,all=d===L.length;
+ return `<div class="sum"><div style="font-size:.9em"><b>${k.code} ${esc(k.name)}｜${d}／${L.length}</b><div class="rs">${all?'都完成了':'下一項：'+esc((L.find(t=>!t.done)||{}).label||'')}</div></div><button class="btn" data-pkfin="${k.code}" ${all?'':'disabled'} style="width:auto;padding:12px 16px;margin:0">${k.code==='A'?'完成安裝':'完成，交給下一位'}</button></div>`}
+async function techStart(code){let o=S.order;const k=(o.packages||[]).find(x=>x.code===code);if(!k)return;
+ if(code==='A'){if(o.status==='已指派'||k.status==='未開始')S.order=await api('/tech/orders/'+o.id+'/start',{method:'POST'})}
+ else if(k.status!=='進行中'&&k.status!=='暫停')S.order=await api('/tech/orders/'+o.id+'/packages/'+code+'/start',{method:'POST'})}
+function derivedA(o,T,extra){const st={...(o.steps||{}),...(extra||{})},pin=id=>{const t=T.find(x=>x.key==='pin:'+id);return !t||t.done};
+ const Ap=T.filter(t=>t.pkg==='A'&&t.pin);st.g=pin('GW');st.s=Ap.filter(t=>t.pin.k==='door').every(t=>t.done);st.b=pin('BT');st.scan=Ap.every(t=>t.done);
+ Object.keys(st).forEach(k=>{if(!st[k])delete st[k]});return st}
+function derivedB(o,T,extra){const k=(o.packages||[]).find(x=>x.code==='B');const s={...((k&&k.steps)||{}),...(extra||{})},arr=[];const Bp=T.filter(t=>t.pkg==='B'&&t.pin);
+ s[1]=Bp.filter(t=>t.pin.k==='light').every(t=>t.done);s[2]=Bp.filter(t=>t.pin.k==='strip').every(t=>t.done);for(let i=0;i<5;i++)arr[i]=!!s[i];return arr}
+async function techDone(key){const o=S.order,T=taskList(o),t=T.find(x=>x.key===key);if(!t)return;await techStart(t.pkg);let cur=S.order;
+ if(t.pin){cur=await api('/tech/orders/'+cur.id+'/pins/'+t.pin.id,{method:'POST',body:{st:'done'}});}
+ else{const [c,k]=key.split(':');if(c==='A'){cur={...cur,steps:{...(cur.steps||{}),[k]:true}}}else{const kk=(cur.packages||[]).find(x=>x.code===c);if(kk)kk.steps={...(kk.steps||{}),[k]:true}}}
+ S.order=cur;const T2=taskList(cur);
+ if(t.pkg==='A'){await api('/tech/orders/'+cur.id+'/steps',{method:'PUT',body:{steps:derivedA(cur,T2)}})}
+ else if(t.pkg==='B'){await api('/tech/orders/'+cur.id+'/packages/B/steps',{method:'PUT',body:{steps:derivedB(cur,T2)}})}
+ else{const kk=(cur.packages||[]).find(x=>x.code===t.pkg);const arr=(kk.step_names||[]).map((_,i)=>!!(kk.steps||{})[i]);await api('/tech/orders/'+cur.id+'/packages/'+t.pkg+'/steps',{method:'PUT',body:{steps:arr}})}
+ S.order=await api('/tech/orders/'+cur.id);const nx=taskList(S.order).find(x=>x.mine&&!x.done&&!x.locked);S.tsel=nx?nx.key:null;if(nx)S.topen=nx.group}
+async function techFinish(code){const o=S.order;await techStart(code);
+ if(code==='A')S.order=await api('/tech/orders/'+o.id+'/complete',{method:'POST',body:{steps:derivedA(S.order,taskList(S.order))}});
+ else S.order=await api('/tech/orders/'+o.id+'/packages/'+code+'/complete',{method:'POST'})}
+
 let stepTimer=null;
 function saveSteps(){const o=S.order;if(!o||o.status!=='進行中')return;clearTimeout(stepTimer);const t=TS();
  stepTimer=setTimeout(()=>{api('/tech/orders/'+o.id+'/steps',{method:'PUT',body:{steps:t.st,diff:t.diff}}).catch(e=>toast(e.message))},500)}
@@ -1110,6 +1175,8 @@ document.getElementById('view').addEventListener('submit',e=>{e.preventDefault()
  else if(f.id==='pwForm')busy(b,async()=>{await api('/me/password',{method:'POST',body:{old:f.old.value,password:f.password.value}});toast('密碼已更新');back()},er)});
 document.getElementById('view').addEventListener('click',e=>{
  const pg=e.target.closest('[data-pin]');
+ const tp=e.target.closest('[data-tpin]');
+ if(tp){const k=tp.dataset.tpin,t=taskList(S.order).find(x=>x.key===k);S.tsel=S.tsel===k?null:k;if(t)S.topen=t.group;rr();return}
  if(pg){const id=pg.dataset.pin,v=S.stack[S.stack.length-1];if(v==='apm'){S.pmSel=S.pmSel===id?null:id}else if(v==='tc'){S.tpin=S.tpin===id?null:id}rr();return}
  const pm=e.target.closest('[data-pmap]');
  if(pm&&S.pmSel&&!e.target.closest('button')){const sv=pm.querySelector('svg'),rc=sv.getBoundingClientRect(),sx=HPV[0]+(e.clientX-rc.left)/rc.width*HPV[2],sy=HPV[1]+(e.clientY-rc.top)/rc.height*HPV[3];let [x,z]=hpInv(sx,sy);x=Math.max(0,Math.min(9,x));z=Math.max(0,Math.min(9,z));
@@ -1125,6 +1192,11 @@ document.getElementById('view').addEventListener('click',e=>{
  if(t.dataset.rdraft){busy(t,async()=>{const d=await api('/advisor/reminders/'+t.dataset.rdraft+'/draft',{method:'POST'});await loadAdvHome();toast('已建立維護工單草稿 '+d.code);rr()});return}
  if(t.dataset.ddisp){busy(t,async()=>{const x=new Date();x.setDate(x.getDate()+1);const ymd=x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');const d=await api('/admin/installs/'+t.dataset.ddisp+'/schedule',{method:'POST',body:{date:ymd,time:'14:00',tech_id:+t.dataset.tid}});await loadAdvHome();toast('已派工：'+d.label);rr()});return}
  if(t.dataset.ttab){S.ttab=t.dataset.ttab;S.tpin=null;rr();return}
+ if(t.dataset.tgrp){S.topen=S.topen===t.dataset.tgrp?'__none':t.dataset.tgrp;S.tsel=null;rr();return}
+ if(t.dataset.tsel){S.tsel=S.tsel===t.dataset.tsel?null:t.dataset.tsel;rr();return}
+ if(t.dataset.tdone){busy(t,async()=>{await techDone(t.dataset.tdone);toast('已完成');rr()});return}
+ if(t.dataset.pkfin){const c=t.dataset.pkfin;busy(t,async()=>{await techFinish(c);toast(S.order.status==='待驗收'?'全部施工完成，請長輩驗收':c==='A'?'關懷設備完成':'已完成，交給下一位技師');rr()});return}
+ if(t.dataset.acc){const [g,v]=t.dataset.acc.split('|');S.acc[g]=+v;rr();return}
  if(t.dataset.pkgo){const c=t.dataset.pkgo,o=S.order,k=(o.packages||[]).find(x=>x.code===c);if(!k)return;
   if(c==='A'){busy(t,async()=>{if(o.status==='已指派'||k.status==='未開始'){S.order=await api('/tech/orders/'+o.id+'/start',{method:'POST'})}S.tech={st:{...S.order.steps},diff:S.order.diff||''};go('t3')});return}
   busy(t,async()=>{if(k.status!=='進行中'&&k.status!=='暫停')S.order=await api('/tech/orders/'+o.id+'/packages/'+c+'/start',{method:'POST'});S.tpkg=c;const k2=S.order.packages.find(x=>x.code===c);S.pst={...(k2.steps||{})};go('tp')});return}
@@ -1194,9 +1266,14 @@ document.getElementById('view').addEventListener('click',e=>{
  else if(a==='aiUse')toast('已採用 AI 建議');
  else if(a==='aiEdit')toast('已採用並記錄修改原因');
  else if(a==='aiSkip')toast('已記錄不採用原因');
- else if(a==='tOpen'){const o=(S.orders||[]).find(x=>String(x.id)===t.dataset.id);if(!o)return;S.order=o;S.ttab='task';S.tpin=null;S.tech={st:{...o.steps},diff:o.diff||''};go(o.status==='已完成'?'t4':'tc')}
- else if(a==='tPhoto')toast('已拍照（只拍設備位置，不含人像），附在完工報告');
- else if(a==='tDiffGo'){S.tdf={level:'輕微',text:'',photo:false};go('tdf')}
+ else if(a==='tOpen'){const o=(S.orders||[]).find(x=>String(x.id)===t.dataset.id);if(!o)return;S.order=o;S.ttab='work';S.tpin=null;S.topen=null;S.tsel=(taskList(o).find(x=>x.mine&&!x.done&&!x.locked)||{}).key||null;S.tech={st:{...o.steps},diff:o.diff||''};go(o.status==='已完成'?'t4':'tc')}
+ else if(a==='tPhoto'){S.photo=S.photo||{};if(S.tsel)S.photo[S.tsel]=true;toast('已拍照（只拍設備位置，不含人像），附在完工報告');rr()}
+ else if(a==='tDiffGo'){const tt=taskList(S.order).find(x=>x.key===S.tsel);S.tpin=tt&&tt.pin?tt.pin.id:null;S.tdf={level:'輕微',text:'',photo:false};go('tdf')}
+ else if(a==='famAcc')busy(t,async()=>{applyHome(await api('/install/accept',{method:'POST',body:{}}));toast('已驗收，長輩關懷啟用');rr()});
+ else if(a==='famRej'){const note=(document.getElementById('famRej').value||'').trim();if(!note){toast('請寫下哪裡有問題');return}busy(t,async()=>{applyHome(await api('/install/reject',{method:'POST',body:{note,areas:[]}}));toast('已退回，門市與技師會再處理');rr()})}
+ else if(a==='tAccGo'){S.acc={};S.accNote='';go('tacc')}
+ else if(a==='accOk')busy(t,async()=>{S.order=await api('/tech/orders/'+S.order.id+'/accept',{method:'POST',body:{items:Object.keys(S.acc)}});toast(EN()+'驗收完成，摘要已同步給家人');S.stack=['t1','t4'];render()});
+ else if(a==='accNo'){const el=document.getElementById('accNote');const note=(el&&el.value||'').trim();if(!note){toast('請寫下哪裡有問題');return}busy(t,async()=>{S.order=await api('/tech/orders/'+S.order.id+'/reject',{method:'POST',body:{areas:Object.keys(S.acc).filter(g=>S.acc[g]===0),note}});toast('已退回，相關項目改回待施工');S.stack=['t1','tc'];S.ttab='work';render()})}
  else if(a==='tdfPhoto'){S.tdf.photo=!S.tdf.photo;rr()}
  else if(a==='tdfSend'){const f=S.tdf,el=document.getElementById('tdfTxt');if(el)f.text=el.value.trim()||f.text;if(!f.text){toast('請描述現場差異');return}const pins=S.order.pv?S.order.pv.pins:[],sp=pins.find(p=>p.id===S.tpin),pk=sp?sp.pkg:(S.stack.includes('tp')?S.tpkg:'A');
   busy(t,async()=>{S.order=await api('/tech/orders/'+S.order.id+'/diffs',{method:'POST',body:{pin_id:sp?sp.id:null,pkg:pk,level:f.level,text:f.text,photo:f.photo}});toast(f.level==='暫停'?'已送出，施工包暫停，等待顧問核准':'已送出差異回報，可以繼續施工');back()})}
@@ -1235,14 +1312,21 @@ document.getElementById('view').addEventListener('click',e=>{
  else if(a==='ipList'){const it=instItems({plan:S.hh.plan});toast(it.length?it.map(([n,q])=>n+' '+q).join('、'):'依工單內容')}
  else if(a==='ntAgain'){const i=S.stack.lastIndexOf('n0');if(i>=0){S.stack=S.stack.slice(0,i+1);render()}else back()}
 });
-document.getElementById('view').addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.cmpr){cmpSet(e.target.dataset.cmpr,+e.target.value);return}if(e.target.id==='tdfTxt'&&S.tdf){S.tdf.text=e.target.value;return}const m=e.target.dataset&&e.target.dataset.meas;if(m){S.meas[m]=e.target.value;return}const a=A();if(!a)return;if(e.target.id==='c2n'){a.c2n=e.target.value;const b=document.querySelector('[data-a="advConfirm"]');if(b)b.disabled=hasGuard()&&!a.c2n.trim();const h=document.getElementById('hintbar');if(h)h.style.display=(hasGuard()&&!a.c2n.trim())?'block':'none'}if(e.target.id==='c2p')a.c2p=e.target.value;if(e.target.id==='ewish')a.ewish=e.target.value});
+document.getElementById('view').addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.cmpr){cmpSet(e.target.dataset.cmpr,+e.target.value);return}if(e.target.id==='tdfTxt'&&S.tdf){S.tdf.text=e.target.value;return}if(e.target.id==='accNote'){S.accNote=e.target.value;return}const m=e.target.dataset&&e.target.dataset.meas;if(m){S.meas[m]=e.target.value;return}const a=A();if(!a)return;if(e.target.id==='c2n'){a.c2n=e.target.value;const b=document.querySelector('[data-a="advConfirm"]');if(b)b.disabled=hasGuard()&&!a.c2n.trim();const h=document.getElementById('hintbar');if(h)h.style.display=(hasGuard()&&!a.c2n.trim())?'block':'none'}if(e.target.id==='c2p')a.c2p=e.target.value;if(e.target.id==='ewish')a.ewish=e.target.value});
 boot();
 // 錄製 Demo 影片用：讓自動化腳本能逐格播放 AR 動畫
 async function tourDiag(){if(!S.meas||!Object.keys(S.meas).length)S.meas={corridor_cm:AR_RES.corridor_cm,threshold_cm:AR_RES.threshold_cm,bed_bath_m:AR_RES.bed_bath_m,outlets:AR_RES.outlets};
  const ans={live:'剛開始一個人住',night:'一晚兩次以上',light:'偏暗',phone:'只會接電話',worry:'夜間跌倒沒人知道'};
  applyHome(await api('/assessments',{method:'POST',body:{answers:ans,measures:S.meas,filled_by:'child',duration_s:S.d0?Math.round((Date.now()-S.d0)/1000):240}}));S.d0=null;S.stack=['home','b3'];render()}
-async function tourDiff(){const o=S.order;if(!o)throw new Error('請先打開張女士家的工單');S.order=await api('/tech/orders/'+o.id+'/diffs',{method:'POST',body:{pin_id:'D2',level:'暫停',text:'大門為鋁框，感測器改用強力背膠並往內移 3 cm',photo:true}});S.tpin='D2';S.ttab='map';S.stack=['t1','tc'];render();toast('已送出：A 施工包暫停，等待門市顧問核准')}
-window.JJJ={S,arApply,arSheetInner,render,go,tourDiag,tourDiff,tourGo:(st,home)=>{if(home)S.home=home;S.stack=st;render()}};
+async function tourDiff(){await tourOrder();const o=S.order;S.order=await api('/tech/orders/'+o.id+'/diffs',{method:'POST',body:{pin_id:'D2',level:'暫停',text:'大門為鋁框，感測器改用強力背膠並往內移 3 cm',photo:true}});S.tpin='D2';S.ttab='work';S.tsel='pin:D2';S.topen='玄關';S.stack=['t1','tc'];render();toast('已送出：A 施工包暫停，等待門市顧問核准')}
+async function tourOrder(){if(!S.order){const d=await api('/tech/orders');S.orders=d.orders;S.today=d.today;S.order=d.orders.find(o=>o.status!=='已完成')||d.orders[0]}if(!S.order)throw new Error('沒有工單');S.order=await api('/tech/orders/'+S.order.id)}
+async function tourFinish(){await tourOrder();let T=taskList(S.order);await techStart('A');
+ for(const t of T.filter(x=>x.pkg==='A'&&!x.done&&x.pin))S.order=await api('/tech/orders/'+S.order.id+'/pins/'+t.pin.id,{method:'POST',body:{st:'done'}});
+ const all={m:1,ph0:1,g:1,s:1,b:1,scan:1,fine:1,test:1,ph1:1,rc:1,teach:1};await api('/tech/orders/'+S.order.id+'/steps',{method:'PUT',body:{steps:all}});
+ S.order=await api('/tech/orders/'+S.order.id+'/complete',{method:'POST',body:{steps:all}});S.stack=['t1','tc'];S.ttab='work';S.topen='收尾';render()}
+async function tourAccept(){await tourOrder();S.acc={};taskList(S.order).forEach(t=>{if(t.group!=='開工')S.acc[t.group]=1});S.stack=['t1','tc','tacc'];render();await new Promise(r=>setTimeout(r,900));
+ S.order=await api('/tech/orders/'+S.order.id+'/accept',{method:'POST',body:{items:Object.keys(S.acc)}});S.stack=['t1','t4'];render();toast(EN()+'驗收完成，摘要已同步給家人')}
+window.JJJ={S,arApply,arSheetInner,render,go,tourDiag,tourDiff,tourFinish,tourAccept,tourGo:(st,home)=>{if(home)S.home=home;S.stack=st;render()}};
 })();
 </script>
 <div id="webDemo" style="position:fixed;right:10px;bottom:10px;z-index:9999;font:12px/1.4 sans-serif;background:rgba(43,43,41,.82);color:#fff;border-radius:14px;padding:5px 10px;display:flex;gap:8px;align-items:center">瀏覽器展示版<button onclick="if(this.dataset.arm){JJJWEB.reset()}else{this.dataset.arm=1;this.textContent='再按一次確認重設'}" style="font:inherit;color:#fff;background:#D4003C;border:0;border-radius:10px;padding:2px 8px;cursor:pointer">重設資料</button></div><script src="tour.js"></script></body>

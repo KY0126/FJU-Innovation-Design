@@ -17,13 +17,15 @@
     { as: 'advisor@example.com', sel: '[data-board]', t: '今日到府：合併到府', d: '張女士家今天兩個施工包：陳師傅先裝夜燈與門檻提示燈條（B，已完成），吳師傅再裝關懷設備（A）。點進去看方案圖面。', click: '[data-board]' },
     { as: 'advisor@example.com', sel: '.pm', t: '規劃：同一張圖，分施工包', d: '每個標記屬於 A 關懷設備或 B 夜間照明；點標記再點圖面可移動位置。長輩確認後鎖定版本，之後的變更都有版本紀錄。' },
     { as: 'tech@example.com', sel: '.card.focus', t: '③ 技師｜今日工作', d: '吳師傅只看到自己的工單，今天的工單聚焦、其他淡化；水電技師的施工包是灰色、只能查看。', click: '.card.focus' },
-    { as: 'tech@example.com', sel: '[data-ttab="map"]', t: '照著裝：施工圖層', d: '「我的任務」依施工包過濾：夜間照明（B）完成後，關懷設備（A）才解鎖。切到「圖面」看施工圖層。', click: '[data-ttab="map"]' },
-    { as: 'tech@example.com', sel: '.pm', t: '點標記：完成／拍照／回報差異', d: '紅色是我的待施工、酒紅色打勾是已完成、珊瑚色是差異、灰色是其他團隊。大門是鋁框，感測器要改用背膠——導覽幫你送出一則「需暫停」的差異回報。', act: 'diff', btn: '幫我回報差異' },
+    { as: 'tech@example.com', sel: '.tmapc', t: '照著裝：圖上只標號碼', d: '施工圖只標施工順序號碼，顏色代表狀態：紅色待施工、酒紅打勾已完成、珊瑚色差異、灰色是水電技師負責的項目。下面依區域分組，點開就看到該區的工作。', click: '[data-tgrp="玄關"]', clickBtn: '幫我展開「玄關」' },
+    { as: 'tech@example.com', sel: '.tgrp.open', t: '點項目：完成或回報差異', d: '每一項都有安裝位置與注意事項，做完按「完成」。大門是鋁框，感測器要改用背膠——導覽幫你送出一則「需暫停」的差異回報。', act: 'diff', btn: '幫我回報差異' },
     { as: 'advisor@example.com', sel: '#advD', t: '顧問核准差異 → 新版本', d: '差異回報即時出現在顧問的「今天」。核准後圖面產生新版本，技師的施工包自動恢復。', click: '[data-dfok]', clickBtn: '幫我核准' },
+    { as: 'tech@example.com', sel: '.sum', t: '全部完成 → 請長輩驗收', d: '吳師傅把其餘項目做完、按「完成安裝」，工單變成「待驗收」。技師不能自己結案，要由長輩確認。', act: 'finish', btn: '幫我做完其餘項目', click: '[data-a="tAccGo"]', clickBtn: '請長輩驗收' },
+    { as: 'tech@example.com', sel: '.tacc', t: '長輩逐區驗收', d: '手機轉給長輩看，大字逐區確認：夜燈會不會亮、按鈕按不按得到。全部沒問題才按「驗收完成」，摘要同步到子女的 App；有問題就退回，相關項目改回待施工。', act: 'accept', btn: '幫長輩逐區確認並驗收' },
     { as: 'manager@example.com', page: 'admin', sel: '#nav', t: '④ 企業營運資訊平台', d: '總部看到的是同一份資料：側欄分成今日工作、服務家庭、揪心願、門市與人員、試點與分析、系統。' },
     { as: 'manager@example.com', page: 'admin', sel: '#nav [data-tab="wo"]', t: '工單', d: '每張工單都有施工包、檢核清單、現場照片與狀態紀錄，剛才的差異核准也在裡面。', click: '#nav [data-tab="wo"]' },
     { as: 'manager@example.com', page: 'admin', sel: '#nav [data-tab="ops"]', t: '服務地圖', d: '全台 316 家門市 → 縣市 → 逢甲店街區，三層往下鑽、往上捲；選取後其他區塊轉灰。', click: '#nav [data-tab="ops"]' },
-    { as: 'manager@example.com', page: 'admin', sel: '#mapView .smstage', t: '三層服務地圖', d: '點台中市 →「進入」看門市建築；點逢甲店 →「進入街區」看每一戶。點白色房子可直接建立保養工單草稿。導覽到這裡結束。' },
+    { as: 'manager@example.com', page: 'admin', sel: '#mapView .smmain', t: '三層服務地圖', d: '圖上只放顏色、高度、建築與號碼，細節都在右側分組清單；點清單或地圖都會聚焦、其他轉灰。點台中市 →「進入」→ 點逢甲店 →「進入街區」，每一戶的號碼對應清單，可直接建立維護工單草稿。導覽到這裡結束。' },
   ];
   // ---------- 樣式 ----------
   const css = document.createElement('style');
@@ -48,7 +50,7 @@
     else if (b.dataset.t === 'reset') { if (b.dataset.arm) { LS.del(K); window.JJJWEB && JJJWEB.reset(); } else { b.dataset.arm = 1; b.textContent = '再按一次確認重設'; } }
     else { dm.classList.toggle('open'); b.setAttribute('aria-expanded', dm.classList.contains('open')); } });
   // ---------- 導覽 ----------
-  let mask, card, timer, me = null;
+  let mask, card, timer, me = null, scrolled = false;
   const api = async (p, o = {}) => { const r = await fetch('/api' + p, { method: o.method || 'GET', headers: { 'Content-Type': 'application/json', 'X-JJJ': '1' }, body: o.body ? JSON.stringify(o.body) : undefined }); const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || '操作失敗'); return d; };
   async function who() { try { me = (await api('/me')).user; } catch (e) { me = null; } return me; }
   function stop() { LS.del(K); clearInterval(timer); if (mask) mask.remove(); if (card) card.remove(); mask = card = null; }
@@ -60,7 +62,7 @@
   function place() {
     const i = +LS.get(K), s = STEPS[i]; if (!s || !card) return;
     const el = s.sel && document.querySelector(s.sel), ok = el && el.getClientRects().length && (s.page || 'app') === PAGE && me && me.email === s.as;
-    if (ok) { const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) el.scrollIntoView({ block: 'center' });
+    if (ok) { const r = el.getBoundingClientRect(); if (!scrolled || r.bottom < 0 || r.top > innerHeight) { el.scrollIntoView({ block: 'center' }); scrolled = true; }
       const q = el.getBoundingClientRect(); Object.assign(mask.style, { display: '', left: q.left - 6 + 'px', top: q.top - 6 + 'px', width: q.width + 12 + 'px', height: q.height + 12 + 'px' });
       const cw = card.offsetWidth, ch = card.offsetHeight; let x = q.right + 14, y = q.top;
       if (x + cw > innerWidth - 8) { x = Math.min(innerWidth - cw - 12, Math.max(12, q.left)); y = q.bottom + 14; if (y + ch > innerHeight - 8) y = q.top - ch - 14; }
@@ -78,13 +80,15 @@
     else if (s.act && LS.get('jjj_tour_acted') !== String(i)) act = `<button class="p" data-tt="act">${s.btn || '幫我做'}</button>${s.click ? `<button data-tt="click">${s.clickBtn || '幫我點'}</button>` : ''}`;
     else if (s.click) act = `<button class="p" data-tt="click">${s.clickBtn || '幫我點'}</button>`;
     card.innerHTML = `<div class="n">導覽 ${i + 1}／${STEPS.length}｜${WHO[s.as]}</div><h3>${s.t}</h3><p>${s.d}</p><div class="r">${act}${i ? '<button data-tt="prev">上一步</button>' : ''}<button ${act ? '' : 'class="p"'} data-tt="next">${i === STEPS.length - 1 ? '完成' : '下一步'}</button><button class="x" data-tt="stop">結束</button></div>`;
-    clearInterval(timer); timer = setInterval(place, 350); setTimeout(place, 30);
+    scrolled = false; clearInterval(timer); timer = setInterval(place, 350); setTimeout(place, 30);
   }
   async function doAct(s) {
     const J = window.JJJ;
     if (s.act === 'diag' && J && J.tourDiag) await J.tourDiag();
     else if (s.act === 'm2' && J) J.tourGo(['home', 'm2'], 'parents');
     else if (s.act === 'diff' && J && J.tourDiff) await J.tourDiff();
+    else if (s.act === 'finish' && J && J.tourFinish) await J.tourFinish();
+    else if (s.act === 'accept' && J && J.tourAccept) await J.tourAccept();
   }
   document.addEventListener('click', async e => {
     const b = e.target.closest && e.target.closest('#jjjCard [data-tt]'); if (!b) return; const i = +LS.get(K), s = STEPS[i], t = b.dataset.tt;
